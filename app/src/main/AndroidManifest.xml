@@ -19,7 +19,7 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/parse_client_id" />
         <activity
-            android:name=".Login"
+            android:name=".Start"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -27,6 +27,22 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Login"
+            android:label="Login"
+            android:parentActivityName=".Start" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="Login" />
+        </activity>
+        <activity
+            android:name=".Signup"
+            android:label="Signup"
+            android:parentActivityName=".Start" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="Signup" />
         </activity>
     </application>
 

@@ -1,8 +1,12 @@
 package grouphub.travelshare;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +16,7 @@ import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -27,14 +32,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.login);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-        getSupportActionBar().hide();
-        Button signUp = (Button) findViewById(R.id.signupButton);
+
         Button login = (Button) findViewById(R.id.loginButton);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
 
         login.setOnClickListener(this);
-        signUp.setOnClickListener(this);
+
+
     }
 
     @Override
@@ -62,16 +67,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId() ){
-            case R.id.loginButton:
-                login();
-                break;
-            case R.id.signupButton:
-                Intent i = new Intent(Login.this, Signup.class);
-                startActivity(i);
-                break;
-
-        }
+        login();
     }
 
     @Override

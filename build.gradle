@@ -1,5 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-// all projects are using this repo.
+
 buildscript {
     repositories {
         jcenter()
@@ -12,7 +12,6 @@ buildscript {
     }
 }
 
-// all projects are using this repo...
 allprojects {
     repositories {
         jcenter()

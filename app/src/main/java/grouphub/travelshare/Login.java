@@ -41,9 +41,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
         setContentView(R.layout.login);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
         Button signUp = (Button) findViewById(R.id.signupButton);
         Button login = (Button) findViewById(R.id.loginButton);
         email = (EditText) findViewById(R.id.email);

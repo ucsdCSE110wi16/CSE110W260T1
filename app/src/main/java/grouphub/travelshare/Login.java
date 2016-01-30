@@ -1,23 +1,26 @@
 package grouphub.travelshare;
 
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
+
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,20 +29,47 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText email;
     private EditText password;
 
+    CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // initialize facebook login stuff and callback manager
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+
         setContentView(R.layout.login);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-
+        getSupportActionBar().hide();
+        Button signUp = (Button) findViewById(R.id.signupButton);
         Button login = (Button) findViewById(R.id.loginButton);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
 
         login.setOnClickListener(this);
+        signUp.setOnClickListener(this);
 
+        // facebook callback manager for facebook login
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                    }
 
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
     }
 
     @Override
@@ -67,7 +97,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        login();
+        switch (view.getId() ){
+            case R.id.loginButton:
+                login();
+                break;
+            case R.id.signupButton:
+                Intent i = new Intent(Login.this, Signup.class);
+                startActivity(i);
+                break;
+
+        }
     }
 
     @Override

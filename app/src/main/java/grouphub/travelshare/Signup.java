@@ -33,14 +33,11 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         passwordField = (EditText) findViewById(R.id.passwordSignUp);
         usernameField = (EditText) findViewById(R.id.username);
         emailField = (EditText) findViewById(R.id.emailSignUp);
         confirmPasswordField = (EditText) findViewById(R.id.confpasswordSignUp);
-
 
         Button signup = (Button) findViewById(R.id.signupButton);
 

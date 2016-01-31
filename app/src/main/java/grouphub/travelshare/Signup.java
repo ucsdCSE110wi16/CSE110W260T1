@@ -19,6 +19,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.LinkedList;
+
 public class Signup extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "Signup";
@@ -62,14 +64,13 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             errors = true;
         }
 
-        //TODO: check email
-
         ParseUser user = new ParseUser();
        // user.setEmail(email);
         user.setPassword(password);
         user.setUsername(email);
 
         user.put("screenName", username);
+        user.put("groups", new LinkedList<ParseObject>());
 
         user.signUpInBackground(new SignUpCallback() {
             @Override

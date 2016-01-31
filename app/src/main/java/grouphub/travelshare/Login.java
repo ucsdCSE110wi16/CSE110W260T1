@@ -41,7 +41,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
         setContentView(R.layout.login);
-//        getSupportActionBar().hide();
         Button signUp = (Button) findViewById(R.id.signupButton);
         Button login = (Button) findViewById(R.id.loginButton);
         email = (EditText) findViewById(R.id.email);
@@ -76,6 +75,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         getMenuInflater().inflate(R.menu.menu_log_in, menu);
         return true;
     }
+
+    // Returns true if correct login and false otherwise
     private void login() {
         String password = this.password.getText().toString();
         String email = this.email.getText().toString();
@@ -83,14 +84,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         ParseUser.logInInBackground(email, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
-                if(user != null) {
-                    Toast.makeText(Login.this, "HORRAY YOU LOGINED IN", Toast.LENGTH_LONG).show();
+                if (e == null && user != null) {
+                    successfulLogin();
+                } else if (user == null) {
+                    Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_LONG).show();
                 }
                 else {
                     Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    public void successfulLogin() {
+        Toast.makeText(Login.this, "HORRAY YOU LOGINED IN", Toast.LENGTH_LONG).show();
+        Intent intent_home = new Intent(Login.this, Main.class);
+        startActivity(intent_home);
     }
 
     @Override
@@ -100,10 +109,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 login();
                 break;
             case R.id.signupButton:
-                Intent i = new Intent(Login.this, Signup.class);
-                startActivity(i);
+                Intent intent_signup = new Intent(Login.this, Signup.class);
+                startActivity(intent_signup);
                 break;
-
         }
     }
 
@@ -121,4 +129,5 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

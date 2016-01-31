@@ -19,9 +19,13 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -67,9 +71,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         loginButton.registerCallback(callbackManager, Callback);
 
         setContentView(R.layout.login);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        getSupportActionBar().hide();
         Button signUp = (Button) findViewById(R.id.signupButton);
         Button login = (Button) findViewById(R.id.loginButton);
         email = (EditText) findViewById(R.id.email);
@@ -85,6 +86,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         getMenuInflater().inflate(R.menu.menu_log_in, menu);
         return true;
     }
+
+    // Returns true if correct login and false otherwise
     private void login() {
         String password = this.password.getText().toString();
         String email = this.email.getText().toString();
@@ -92,14 +95,36 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         ParseUser.logInInBackground(email, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
-                if(user != null) {
-                    Toast.makeText(Login.this, "HORRAY YOU LOGINED IN", Toast.LENGTH_LONG).show();
-                }
-                else {
+                if (e == null && user != null) {
+                    successfulLogin();
+                } else if (user == null) {
+                    Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_LONG).show();
+                } else {
                     Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    public void successfulLogin() {
+        Toast.makeText(Login.this, "HORRAY YOU LOGINED IN", Toast.LENGTH_LONG).show();
+       /* ParseQuery<ParseUser> userList = ParseUser.getQuery();
+        userList.whereEqualTo("username", "test@gmail.com");
+        userList.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (objects.size() == 1) {
+                    ParseUser test = objects.get(0);
+                    TravelGroup group = new TravelGroup(ParseUser.getCurrentUser(), "TEST");
+                    group.addUser(test);
+                    Toast.makeText(Login.this, "SUCCESS", Toast.LENGTH_LONG).show();
+                }
+            }
+        });*/
+
+
+        Intent intent_home = new Intent(Login.this, Main.class);
+        startActivity(intent_home);
     }
 
     @Override
@@ -109,10 +134,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 login();
                 break;
             case R.id.signupButton:
-                Intent i = new Intent(Login.this, Signup.class);
-                startActivity(i);
+                Intent intent_signup = new Intent(Login.this, Signup.class);
+                startActivity(intent_signup);
                 break;
-
         }
     }
 
@@ -130,4 +154,5 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

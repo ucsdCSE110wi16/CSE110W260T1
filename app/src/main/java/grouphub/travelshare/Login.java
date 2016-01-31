@@ -17,9 +17,13 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -88,8 +92,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     successfulLogin();
                 } else if (user == null) {
                     Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -98,6 +101,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     public void successfulLogin() {
         Toast.makeText(Login.this, "HORRAY YOU LOGINED IN", Toast.LENGTH_LONG).show();
+       /* ParseQuery<ParseUser> userList = ParseUser.getQuery();
+        userList.whereEqualTo("username", "test@gmail.com");
+        userList.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (objects.size() == 1) {
+                    ParseUser test = objects.get(0);
+                    TravelGroup group = new TravelGroup(ParseUser.getCurrentUser(), "TEST");
+                    group.addUser(test);
+                    Toast.makeText(Login.this, "SUCCESS", Toast.LENGTH_LONG).show();
+                }
+            }
+        });*/
+
+
         Intent intent_home = new Intent(Login.this, Main.class);
         startActivity(intent_home);
     }

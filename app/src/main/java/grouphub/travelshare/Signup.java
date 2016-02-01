@@ -1,5 +1,6 @@
 package grouphub.travelshare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -48,7 +49,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
 
         boolean errors = false;
 
-        if(password == "" || password.length() == 1 || email == "" || username == "" || confirmPassword == "") {
+        if(password.equals("") || password.length() == 1 || email.equals("") || username.equals("") || confirmPassword.equals("")) {
             errors = true;
         }
 

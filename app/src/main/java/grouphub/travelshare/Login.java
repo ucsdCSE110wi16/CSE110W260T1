@@ -17,7 +17,6 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.parse.LogInCallback;
@@ -44,10 +43,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         @Override
         public void onSuccess(LoginResult loginResult) {
             //Successful Facebook Login
+            Toast.makeText(Login.this, "WE'RE IN ON SUCCESS", Toast.LENGTH_LONG).show();
             AccessToken accessToken = loginResult.getAccessToken();
-            Profile profile = Profile.getCurrentProfile();
-            if (profile != null) {
-            }
 
             GraphRequest request = GraphRequest.newMeRequest(
                     accessToken,
@@ -61,7 +58,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 String name = (String) object.get("name");
                                 ParseUser user = new ParseUser();
                                 // user.setEmail(email);
-                                user.setPassword("");
+                                user.setPassword("F");
                                 user.setUsername(email);
 
                                 user.put("screenName", name);
@@ -70,9 +67,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     @Override
                                     public void done(ParseException e) {
                                         if (e == null) {
-
-                                        } else {
                                             successfulLogin();
+                                        } else {
+                                            Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
@@ -91,6 +88,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         @Override
         public void onCancel() {
             // User cancels facebook login request
+            Toast.makeText(Login.this, "In On Cancel", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -104,12 +102,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // check if user is already logged in
+        /*// check if user is already logged in
         if(ParseUser.getCurrentUser() != null){
-            Intent intent = new Intent(this, Main.class);
+            Intent intent = new Intent(Login.this, Main.class);
             startActivity(intent);
             return;
-        }
+        }*/
 
         // initialize facebook login stuff and callback manager
         FacebookSdk.sdkInitialize(this.getApplicationContext());

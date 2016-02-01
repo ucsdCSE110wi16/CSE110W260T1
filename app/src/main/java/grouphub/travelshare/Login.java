@@ -21,7 +21,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -43,7 +42,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         @Override
         public void onSuccess(LoginResult loginResult) {
             //Successful Facebook Login
-            Toast.makeText(Login.this, "WE'RE IN ON SUCCESS", Toast.LENGTH_LONG).show();
             AccessToken accessToken = loginResult.getAccessToken();
 
             GraphRequest request = GraphRequest.newMeRequest(
@@ -79,7 +77,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name");
+            parameters.putString("fields", "id,name,email");
             request.setParameters(parameters);
             request.executeAsync();
 
@@ -88,13 +86,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         @Override
         public void onCancel() {
             // User cancels facebook login request
-            Toast.makeText(Login.this, "In On Cancel", Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onError(FacebookException exception) {
             //Facebook login fails(for example internet fails mid login.
-            Toast.makeText(Login.this, "Could not connect to Facebook", Toast.LENGTH_LONG).show();
+            Toast.makeText(Login.this, exception.toString(), Toast.LENGTH_LONG).show();
         }
     };
 
@@ -102,12 +99,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*// check if user is already logged in
+        // check if user is already logged in
+        // IF YOU KEEP GETTING DROPPED INTO THE MAIN ACTIVITY AND WANT TO TEST LOGIN, YOU CAN COMMENT THIS BLOCK OUT
         if(ParseUser.getCurrentUser() != null){
             Intent intent = new Intent(Login.this, Main.class);
             startActivity(intent);
             return;
-        }*/
+        }
 
         // initialize facebook login stuff and callback manager
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -206,6 +204,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

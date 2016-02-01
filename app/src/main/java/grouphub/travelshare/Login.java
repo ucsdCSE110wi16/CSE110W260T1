@@ -50,7 +50,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         @Override
         public void onError(FacebookException exception) {
-            // App code
+            Toast.makeText(Login.this, "Facebook login error: Please report this to the developers", Toast.LENGTH_LONG).show();
         }
     };
 

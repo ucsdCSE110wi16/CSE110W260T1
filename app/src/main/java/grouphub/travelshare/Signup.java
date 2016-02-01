@@ -48,7 +48,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
 
         boolean errors = false;
 
-        if(password == "" || email == "" || username == "" || confirmPassword == "") {
+        if(password == "" || password.length() == 1 || email == "" || username == "" || confirmPassword == "") {
             errors = true;
         }
 

@@ -15,6 +15,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -22,6 +24,10 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -41,6 +47,44 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
             }
+
+            GraphRequest request = GraphRequest.newMeRequest(
+                    accessToken,
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+                            try {
+                                String email = (String) object.get("email");
+                                String name = (String) object.get("name");
+                                ParseUser user = new ParseUser();
+                                // user.setEmail(email);
+                                user.setPassword("");
+                                user.setUsername(email);
+
+                                user.put("screenName", name);
+
+                                user.signUpInBackground(new SignUpCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+
+                                        } else {
+                                            successfulLogin();
+                                        }
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name");
+            request.setParameters(parameters);
+            request.executeAsync();
+
         }
 
         @Override
@@ -50,13 +94,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         @Override
         public void onError(FacebookException exception) {
-            Toast.makeText(Login.this, "Facebook login error: Please report this to the developers", Toast.LENGTH_LONG).show();
+            // App code
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // check if user is already logged in
+        if(ParseUser.getCurrentUser() != null){
+            Intent intent = new Intent(this, Main.class);
+            startActivity(intent);
+            return;
+        }
 
         // initialize facebook login stuff and callback manager
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -65,7 +116,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.login);
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("user_friends", "email"));
+        loginButton.setReadPermissions(Arrays.asList("user_friends", "email", "user_birthday"));
         loginButton.registerCallback(callbackManager, Callback);
 
         Button signUp = (Button) findViewById(R.id.signupButton);

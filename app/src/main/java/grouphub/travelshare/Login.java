@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private FacebookCallback<LoginResult> Callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
+            //Successful Facebook Login
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
@@ -89,12 +90,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         @Override
         public void onCancel() {
-            // App code
+            // User cancels facebook login request
         }
 
         @Override
         public void onError(FacebookException exception) {
-            // App code
+            //Facebook login fails(for example internet fails mid login.
+            Toast.makeText(Login.this, "Could not connect to Facebook", Toast.LENGTH_LONG).show();
         }
     };
 

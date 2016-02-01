@@ -70,7 +70,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             public void done(ParseException e) {
                 if(e == null) {
                     Toast.makeText(Signup.this, "SIGNED UP", Toast.LENGTH_LONG).show();
-                    Intent intent_home = new Intent(Login.this, Main.class);
+                    Intent intent_home = new Intent(Signup.this, Main.class);
                     startActivity(intent_home);
                 }
                 else {

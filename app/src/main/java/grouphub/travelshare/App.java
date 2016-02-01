@@ -3,6 +3,7 @@ package grouphub.travelshare;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 
 
 /**
@@ -20,5 +21,7 @@ public class App extends Application {
 
         // Initialize Parse so that it can be used in the application
         Parse.initialize(this);
+
+        ParseFacebookUtils.initialize(this);
     }
 }

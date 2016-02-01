@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -19,13 +18,12 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseQuery;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
-import java.util.List;
+import java.util.Arrays;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -35,8 +33,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText email;
     private EditText password;
 
-    private TextView textDetails;
-
     private CallbackManager callbackManager;
     private FacebookCallback<LoginResult> Callback = new FacebookCallback<LoginResult>() {
         @Override
@@ -44,7 +40,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
-                textDetails.setText("Welcome " + profile.getName());
             }
         }
 
@@ -66,11 +61,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         // initialize facebook login stuff and callback manager
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
-        loginButton.registerCallback(callbackManager, Callback);
 
         setContentView(R.layout.login);
+
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList("user_friends", "email"));
+        loginButton.registerCallback(callbackManager, Callback);
+
         Button signUp = (Button) findViewById(R.id.signupButton);
         Button login = (Button) findViewById(R.id.loginButton);
         email = (EditText) findViewById(R.id.email);
@@ -155,4 +152,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+    }
 }

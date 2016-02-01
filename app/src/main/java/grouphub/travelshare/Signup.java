@@ -1,12 +1,7 @@
 package grouphub.travelshare;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-
-import java.util.LinkedList;
 
 public class Signup extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,11 +25,14 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         passwordField = (EditText) findViewById(R.id.passwordSignUp);
         usernameField = (EditText) findViewById(R.id.username);
         emailField = (EditText) findViewById(R.id.emailSignUp);
         confirmPasswordField = (EditText) findViewById(R.id.confpasswordSignUp);
+
 
         Button signup = (Button) findViewById(R.id.signupButton);
 
@@ -61,13 +56,14 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             errors = true;
         }
 
+        //TODO: check email
+
         ParseUser user = new ParseUser();
        // user.setEmail(email);
         user.setPassword(password);
         user.setUsername(email);
 
         user.put("screenName", username);
-        user.put("groups", new LinkedList<ParseObject>());
 
         user.signUpInBackground(new SignUpCallback() {
             @Override

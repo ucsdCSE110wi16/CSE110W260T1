@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GroupFragment">
+    tools:context="grouphub.travelshare.FoldersFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="I shall be a group manager page" />
+        android:text="I shall become a folders page" />
 
 </FrameLayout>

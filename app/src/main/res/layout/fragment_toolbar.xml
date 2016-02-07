@@ -2,22 +2,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/buttonpre"
     tools:context="grouphub.travelshare.ToolbarFragment">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/colorPrimaryDark">
-    </android.support.v7.widget.Toolbar>
+        android:orientation="horizontal"
+        android:id="@+id/button_layout">
 
-<!--    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign up!"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignRight="@+id/linearLayout"
-        android:layout_alignEnd="@+id/linearLayout"
-        />-->
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:id="@+id/button_folders"
+            android:background="@drawable/custom_button"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="CAMERA"
+            android:id="@+id/button_camera"
+            android:background="@drawable/custom_button"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="M"
+            android:id="@+id/button_manager"
+            android:background="@drawable/custom_button"
+            android:layout_toLeftOf="@+id/button_views"/>
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="V"
+            android:id="@+id/button_views"
+            android:background="@drawable/custom_button"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 
 </FrameLayout>

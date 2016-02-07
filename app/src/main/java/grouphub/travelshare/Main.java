@@ -10,16 +10,49 @@ import android.support.v7.widget.Toolbar;
 
 public class Main extends AppCompatActivity {
     FragmentManager fragmentManager = getFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+    ToolbarFragment fragment_toolbar = new ToolbarFragment();
+    HomepageFragment fragment_homepage = new HomepageFragment();
+    GroupFragment fragment_group = new GroupFragment();
+    FoldersFragment fragment_folders = new FoldersFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // A new fragment manager must be created for each fragment operation
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         setContentView(R.layout.activity_main);
 
-        HomepageFragment fragment_homepage = new HomepageFragment();
+        fragmentTransaction.add(R.id.fragment_toolbar, fragment_toolbar);
         fragmentTransaction.add(R.id.placeholder, fragment_homepage);
-//        getSupportFragmentManager().beginTransaction().add(R.id.placeholder, fragment_homepage);
+        fragmentTransaction.commit();
+    }
+
+    public void switchToHomepage() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.placeholder, fragment_homepage);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
+
+    public void switchToGroupManager() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.placeholder, fragment_group);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
+
+    public void switchToFolders() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.placeholder, fragment_folders);
+        fragmentTransaction.addToBackStack(null);
+
         fragmentTransaction.commit();
     }
 

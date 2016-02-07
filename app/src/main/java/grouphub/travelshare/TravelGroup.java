@@ -1,7 +1,11 @@
 package grouphub.travelshare;
 
+import android.util.Log;
+
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
@@ -16,6 +20,7 @@ public class TravelGroup {
     private ArrayList<String> users;
     private String description;
     private ParseObject currentGroup;
+    private String objectId;
 
     public TravelGroup(ParseUser leader, String groupName) {
         this.leader = leader;
@@ -28,9 +33,26 @@ public class TravelGroup {
         currentGroup.addAll("users", users);
         ArrayList <ParseObject> groups = (ArrayList) this.leader.get("groups");
         groups.add(0, currentGroup);
-        currentGroup.saveInBackground();
+        currentGroup.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null) {
+                    objectId = currentGroup.getObjectId();
+                }
+                else {
+                    Log.d(TAG, "Error in creating TravelGroup: " + e);
+                }
+            }
+        });
         this.leader.put("groups", groups);
-        this.leader.saveInBackground();
+        this.leader.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) {
+                    Log.d(TAG, "Error occured in updating leader with travel group");
+                }
+            }
+        });
     }
 
     //TODO send a request to invite a user
@@ -83,5 +105,19 @@ public class TravelGroup {
         this.groupName = groupName;
         currentGroup.put("groupName", groupName);
         currentGroup.saveInBackground();
+    }
+
+    public static TravelGroup getActiveTravelGroup(ParseUser user) {
+        //TODO: create method to return active Travel Group of user
+        return null;
+    }
+
+    public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {
+        //TODO: create method to return list of travel groups connected to user
+        return null;
+    }
+
+    protected ParseObject getParseObject() {
+        return currentGroup;
     }
 }

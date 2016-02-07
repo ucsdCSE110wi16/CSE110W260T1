@@ -101,11 +101,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         // check if user is already logged in
         // IF YOU KEEP GETTING DROPPED INTO THE MAIN ACTIVITY AND WANT TO TEST LOGIN, YOU CAN COMMENT THIS BLOCK OUT
-        if(ParseUser.getCurrentUser() != null){
+        /*if(ParseUser.getCurrentUser() != null){
             Intent intent = new Intent(Login.this, Main.class);
             startActivity(intent);
             return;
-        }
+        }*/
 
         // initialize facebook login stuff and callback manager
         FacebookSdk.sdkInitialize(this.getApplicationContext());

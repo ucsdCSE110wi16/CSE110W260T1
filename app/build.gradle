@@ -10,6 +10,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        //testing config
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
@@ -33,4 +36,16 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
+
+    //Testing only dependencies
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2') {
+        // Necessary if your app targets Marshmallow (since Espresso
+        // hasn't moved to Marshmallow yet)
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test:runner:0.3') {
+        // Necessary if your app targets Marshmallow (since the test runner
+        // hasn't moved to Marshmallow yet)
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }

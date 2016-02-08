@@ -89,43 +89,29 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+        Fragment fragment;
+
         switch (view.getId()) {
             case R.id.button_folders:
-                switchToFolders();
+                fragment = new FoldersFragment();
+                switchPage(fragment, "ToFolders");
                 break;
             case R.id.button_camera:
                 useCamera();
                 break;
             case R.id.button_manager:
-                switchToGroupManager();
+                fragment = new GroupFragment();
+                switchPage(fragment, "ToManager");
                 break;
             case R.id.button_views:
                 break;
         }
     }
 
-    public void switchToHomepage() {
+    public void switchPage(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-        fragmentTransaction.replace(R.id.placeholder, new HomepageFragment(), "ToHomepage");
-        fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.commit();
-    }
-
-    public void switchToGroupManager() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.placeholder, new GroupFragment(), "ToHomepage");
-        fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.commit();
-    }
-
-    public void switchToFolders() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.placeholder, new FoldersFragment(), "ToHomepage");
+        fragmentTransaction.replace(R.id.placeholder, fragment, tag);
         fragmentTransaction.addToBackStack(null);
 
         fragmentTransaction.commit();
@@ -162,5 +148,4 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
             }
         }
     }
-
 }

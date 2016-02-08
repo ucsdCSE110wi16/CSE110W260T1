@@ -9,7 +9,7 @@
     >
 
     <!-- Was FrameLayout and Relative Layout, but display overlap of fragments. Pourquoi?-->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +17,7 @@
         android:layout_weight="100"
         android:orientation="horizontal"
         >
-    </LinearLayout>
+    </FrameLayout>
 
     <include
         android:id="@+id/fragment_toolbar"

@@ -104,6 +104,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         if(ParseUser.getCurrentUser() != null){
             Intent intent = new Intent(Login.this, Main.class);
             startActivity(intent);
+            finish();
             return;
         }
 
@@ -171,6 +172,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         Intent intent_home = new Intent(Login.this, Main.class);
         startActivity(intent_home);
+        finish();
     }
 
     @Override
@@ -182,6 +184,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.signupButton:
                 Intent intent_signup = new Intent(Login.this, Signup.class);
                 startActivity(intent_signup);
+                finish();
                 break;
         }
     }

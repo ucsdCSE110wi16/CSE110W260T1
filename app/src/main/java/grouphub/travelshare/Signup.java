@@ -86,6 +86,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         signUp();
+        finish();
     }
 
     @Override

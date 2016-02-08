@@ -1,13 +1,20 @@
 package grouphub.travelshare;
 
-import android.content.Context;
+import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener{
     View view;
@@ -25,6 +32,10 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // some variables needed for the camera interface
+    private Uri uriSavedImage;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     public ToolbarFragment() {
         // Required empty public constructor
@@ -82,12 +93,41 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
                 ((Main)getActivity()).switchToFolders();
                 break;
             case R.id.button_camera:
+                // do camera stuff
+                // this code will test if the camera interface code will work
+                Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "TravelShareTemp");
+                imagesFolder.mkdirs();
+                File image = new File(imagesFolder, "tempImage.jpg");
+                uriSavedImage = Uri.fromFile(image);
+                imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+                startActivityForResult(imageIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.button_manager:
                 ((Main)getActivity()).switchToGroupManager();
                 break;
             case R.id.button_views:
                 break;
+        }
+    }
+
+    // used to process the saved image from the camera
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == -1) {
+                // Image captured and saved to fileUri specified in the Intent
+                Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+
+                // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
+
+            } else if (resultCode == 0) {
+
+            } else {
+                // Image capture failed, advise user
+            }
         }
     }
 }

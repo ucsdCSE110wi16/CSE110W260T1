@@ -1,12 +1,13 @@
 package grouphub.travelshare;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 //import android.widget.Toolbar;
+
+
 
 public class Main extends AppCompatActivity {
     FragmentManager fragmentManager = getFragmentManager();
@@ -15,6 +16,10 @@ public class Main extends AppCompatActivity {
     HomepageFragment fragment_homepage = new HomepageFragment();
     GroupFragment fragment_group = new GroupFragment();
     FoldersFragment fragment_folders = new FoldersFragment();
+
+    private Uri uriSavedImage;
+
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

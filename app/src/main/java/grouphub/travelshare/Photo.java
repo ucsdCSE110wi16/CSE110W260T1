@@ -5,7 +5,6 @@ import android.location.Location;
 import android.util.Log;
 
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;

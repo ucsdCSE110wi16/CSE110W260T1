@@ -100,7 +100,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         // check if user is already logged in
-        // IF YOU KEEP GETTING DROPPED INTO THE MAIN ACTIVITY AND WANT TO TEST LOGIN, YOU CAN COMMENT THIS BLOCK OUT
+        // IF YOU KEEP GETTING DROPPED INTO THE MAIN ACTIVITY AND WANT TO TEST LOGIN, YOU CAN ADD ParseUser.LogOut() BEFORE THIS BLOCK OF CODE TO LOG THE USER OUT
         if(ParseUser.getCurrentUser() != null){
             Intent intent = new Intent(Login.this, Main.class);
             startActivity(intent);

@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".Main">
+    tools:context=".Main"
+    >
 
-    <FrameLayout
+    <!-- Was FrameLayout and Relative Layout, but display overlap of fragments. Pourquoi?-->
+    <LinearLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_weight="100"
+        android:orientation="horizontal"
+        >
+    </LinearLayout>
 
-        <include
-            android:id="@+id/fragment_toolbar"
-            layout="@layout/fragment_toolbar"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="center|bottom" />
-    </FrameLayout>
+    <include
+        android:id="@+id/fragment_toolbar"
+        layout="@layout/fragment_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_gravity="center|bottom"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_weight="1"/>
 
-</RelativeLayout>
+</LinearLayout>

@@ -1,6 +1,7 @@
 package grouphub.travelshare;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -90,25 +91,56 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_folders:
-                ((Main)getActivity()).switchToFolders();
+                switchToFolders();
                 break;
             case R.id.button_camera:
-                // do camera stuff
-                // this code will test if the camera interface code will work
-                Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File imagesFolder = new File(Environment.getExternalStorageDirectory(), "TravelShareTemp");
-                imagesFolder.mkdirs();
-                File image = new File(imagesFolder, "tempImage.jpg");
-                uriSavedImage = Uri.fromFile(image);
-                imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
-                startActivityForResult(imageIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                useCamera();
                 break;
             case R.id.button_manager:
-                ((Main)getActivity()).switchToGroupManager();
+                switchToGroupManager();
                 break;
             case R.id.button_views:
                 break;
         }
+    }
+
+    public void switchToHomepage() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.placeholder, new HomepageFragment(), "ToHomepage");
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
+
+    public void switchToGroupManager() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.placeholder, new GroupFragment(), "ToHomepage");
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
+
+    public void switchToFolders() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.placeholder, new FoldersFragment(), "ToHomepage");
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
+    }
+
+    public void useCamera() {
+        // do camera stuff
+        // this code will test if the camera interface code will work
+        Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "TravelShareTemp");
+        imagesFolder.mkdirs();
+        File image = new File(imagesFolder, "tempImage.jpg");
+        uriSavedImage = Uri.fromFile(image);
+        imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+        startActivityForResult(imageIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
     // used to process the saved image from the camera
@@ -130,4 +162,5 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
             }
         }
     }
+
 }

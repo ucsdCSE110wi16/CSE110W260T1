@@ -25,6 +25,12 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
     private Button button_camera;
     private Button button_views;
 
+    //manage user location information
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private String locationProvider;
+    private Location lastKnownLocation;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -118,6 +124,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
     }
 
     public void useCamera() {
+        //start listening for user location.
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
         // do camera stuff
         // this code will test if the camera interface code will work
         Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -133,6 +141,19 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == -1) {
+                //get location
+                Location currentLoc = getCurrentLocation();
+                //stop listening for location updates
+                locationManager.removeUpdates(locationListener);
+
+                double latitude = currentLoc.getLatitude();
+                double longitude = currentLoc.getLongitude();
+
+                //TEST PLEASE REMOVE AFTER TESTING
+                Toast.makeText(Login.this,"Latitude:"+latitude, Toast.LENGTH_LONG).show();
+                Toast.makeText(Login.this,"Longitude:"+longitude, Toast.LENGTH_LONG).show();
+                //END TEST
+
                 // Image captured and saved to fileUri specified in the Intent
                 Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -146,6 +167,41 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
             } else {
                 // Image capture failed, advise user
             }
+        }
+    }
+    /*Create our location listener we can call for retrieving current user location*/
+    public void initalizeLocationListener(){
+        // Acquire a reference to the system Location Manager
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+        //Alternativly GPS_PROVIDER
+        locationProvider = LocationManager.NETWORK_PROVIDER;
+
+    }
+    /*PRECONDITION:
+    locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener) is called
+    Returns last known location fromt the location updates system only overwrites last known
+    location if it can get location*/
+    private Location getCurrentLocation(){
+
+        Location currentLoc = locationManager.getLastKnownLocation(locationProvider);
+
+        if (currentLoc != null){
+            lastKnownLocation = currentLoc;
+            return currentloc;
+        } else {
+            return lastKnownLocation;
         }
     }
 }

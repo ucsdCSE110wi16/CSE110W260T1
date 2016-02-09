@@ -2,13 +2,18 @@ package grouphub.travelshare;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +22,7 @@ import android.widget.Button;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-public class ToolbarFragment extends Fragment implements View.OnClickListener{
+public class ToolbarFragment extends Fragment implements View.OnClickListener {
     View view;
 
     private Button button_folders;
@@ -73,6 +78,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        lastKnownLocation = null;
     }
 
     @Override
@@ -125,7 +131,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
 
     public void useCamera() {
         //start listening for user location.
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+        initializeLocationListener();
+        locationManager.requestLocationUpdates(locationProvider, 5000, 0, locationListener);
         // do camera stuff
         // this code will test if the camera interface code will work
         Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -146,21 +153,18 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
                 //stop listening for location updates
                 locationManager.removeUpdates(locationListener);
 
-                double latitude = currentLoc.getLatitude();
-                double longitude = currentLoc.getLongitude();
-
-                //TEST PLEASE REMOVE AFTER TESTING
-                Toast.makeText(Login.this,"Latitude:"+latitude, Toast.LENGTH_LONG).show();
-                Toast.makeText(Login.this,"Longitude:"+longitude, Toast.LENGTH_LONG).show();
-                //END TEST
+                // print out latitude and longitude to log
+                Log.d("latitude", "latitude: " + currentLoc.getLatitude());
+                Log.d("longitude", "longitude: " + currentLoc.getLongitude());
 
                 // Image captured and saved to fileUri specified in the Intent
                 Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 70, stream);
                 byte[] image = stream.toByteArray();
 
                 // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
+                // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
 
             } else if (resultCode == 0) {
 
@@ -170,12 +174,12 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
         }
     }
     /*Create our location listener we can call for retrieving current user location*/
-    public void initalizeLocationListener(){
+    public void initializeLocationListener(){
         // Acquire a reference to the system Location Manager
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
             }
 
@@ -186,7 +190,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
             public void onProviderDisabled(String provider) {}
         };
         //Alternativly GPS_PROVIDER
-        locationProvider = LocationManager.NETWORK_PROVIDER;
+        locationProvider = LocationManager.GPS_PROVIDER;
 
     }
     /*PRECONDITION:
@@ -199,7 +203,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener{
 
         if (currentLoc != null){
             lastKnownLocation = currentLoc;
-            return currentloc;
+            return currentLoc;
         } else {
             return lastKnownLocation;
         }

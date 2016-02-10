@@ -1,14 +1,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homepage_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="grouphub.travelshare.HomepageFragment">
 
-    <TextView
+    <ScrollView
+        android:id="@+id/homepage_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I shall become a homepage" />
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/homepage_main_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>

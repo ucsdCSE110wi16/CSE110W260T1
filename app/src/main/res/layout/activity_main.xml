@@ -8,7 +8,6 @@
     tools:context=".Main"
     >
 
-    <!-- Was FrameLayout and Relative Layout, but display overlap of fragments. Pourquoi?-->
     <FrameLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"

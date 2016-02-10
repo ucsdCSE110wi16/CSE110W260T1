@@ -29,13 +29,6 @@ repositories { mavenCentral() }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'com.parse:parse-android:1.+'
-    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
 
     //Testing only dependencies
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2') {
@@ -48,4 +41,11 @@ dependencies {
         // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
 }

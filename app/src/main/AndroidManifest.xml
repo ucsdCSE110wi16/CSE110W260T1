@@ -52,7 +52,7 @@
             android:name=".Main"
             android:label="Homepage"
             android:parentActivityName=".Login"
-            android:configChanges="orientation|screenLayout|layoutDirection|screenSize">
+            android:configChanges="orientation|screenLayout|layoutDirection|screenSize|keyboard|keyboardHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Main" />
@@ -60,7 +60,7 @@
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                "orientation|screenLayout|layoutDirection|screenSize|keyboard|keyboardHidden"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
 

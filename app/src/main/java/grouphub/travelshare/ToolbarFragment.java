@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,10 +26,16 @@ import java.io.File;
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
     View view;
 
-    private Button button_folders;
-    private Button button_manager;
-    private Button button_camera;
-    private Button button_views;
+    // Declare toolbar buttons
+    private Button buttonFolders;
+    private Button buttonManager;
+    private Button buttonCamera;
+    private Button buttonViews;
+    
+    // All buttons start out as not being pressed
+    private Boolean buttonFoldersPressed = false;
+    private Boolean buttonManagerPressed = false;
+    private Boolean buttonViewsPressed = false;
 
     //manage user location information
     private LocationManager locationManager;
@@ -86,15 +93,15 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_toolbar, container, false);
 
-        button_folders = (Button) view.findViewById(R.id.button_folders);
-        button_camera = (Button) view.findViewById(R.id.button_camera);
-        button_manager = (Button) view.findViewById(R.id.button_manager);
-        button_views = (Button) view.findViewById(R.id.button_views);
+        buttonFolders = (Button) view.findViewById(R.id.button_folders);
+        buttonCamera = (Button) view.findViewById(R.id.button_camera);
+        buttonManager = (Button) view.findViewById(R.id.button_manager);
+        buttonViews = (Button) view.findViewById(R.id.button_views);
 
-        button_folders.setOnClickListener(this);
-        button_camera.setOnClickListener(this);
-        button_manager.setOnClickListener(this);
-        button_views.setOnClickListener(this);
+        buttonFolders.setOnClickListener(this);
+        buttonCamera.setOnClickListener(this);
+        buttonManager.setOnClickListener(this);
+        buttonViews.setOnClickListener(this);
 
         return view;
     }
@@ -103,21 +110,35 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         Fragment fragment;
 
+        // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
-                fragment = new FoldersFragment();
-                switchPage(fragment, "ToFolders");
+                if(buttonFoldersPressed) {
+                    fragment = new HomepageFragment();
+                    switchPage(fragment, "ToHomepage");
+                } else {
+                    fragment = new FoldersFragment();
+                    switchPage(fragment, "ToFolders");
+                }
+                buttonFoldersPressed = !buttonFoldersPressed;
                 break;
             case R.id.button_camera:
                 useCamera();
                 break;
             case R.id.button_manager:
-                fragment = new GroupFragment();
-                switchPage(fragment, "ToManager");
+                if(buttonManagerPressed) {
+                    fragment = new HomepageFragment();
+                    switchPage(fragment, "ToHomepage");
+                } else {
+                    fragment = new GroupFragment();
+                    switchPage(fragment, "ToManager");
+                }
+                buttonManagerPressed = !buttonManagerPressed;
                 break;
             case R.id.button_views:
                 break;
         }
+
     }
 
     public void switchPage(Fragment fragment, String tag) {
@@ -153,9 +174,15 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 //stop listening for location updates
                 locationManager.removeUpdates(locationListener);
 
-                // print out latitude and longitude to log
-                Log.d("latitude", "latitude: " + currentLoc.getLatitude());
-                Log.d("longitude", "longitude: " + currentLoc.getLongitude());
+                if(currentLoc != null) {
+                    // print out latitude and longitude to log
+                    Log.d("latitude", "latitude: " + currentLoc.getLatitude());
+                    Log.d("longitude", "longitude: " + currentLoc.getLongitude());
+                } else {
+                    // if no location is found print out filler to log
+                    Log.d("latitude", "latitude: " + " No Location");
+                    Log.d("longitude", "longitude: " + " No Location");
+                }
 
                 // Image captured and saved to fileUri specified in the Intent
                 Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
@@ -208,4 +235,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
             return lastKnownLocation;
         }
     }
+
+
 }

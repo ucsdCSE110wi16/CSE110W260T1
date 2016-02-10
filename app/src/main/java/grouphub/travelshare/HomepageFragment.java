@@ -10,15 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class HomepageFragment extends Fragment {
     View view;
-    //FrameLayout homepage;
     LinearLayout mainView;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -30,15 +29,6 @@ public class HomepageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomepageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomepageFragment newInstance(String param1, String param2) {
         HomepageFragment fragment = new HomepageFragment();
         Bundle args = new Bundle();
@@ -63,17 +53,27 @@ public class HomepageFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        //homepage = (FrameLayout) view.findViewById(R.id.homepage_layout);
         mainView = (LinearLayout) view.findViewById(R.id.homepage_main_view);
-        addPictureToView(mainView);
+
+        initializePictures();
 
         return view;
     }
 
-    // Should probably generalize linearlayout, but don't know what parent class is
-    private void addPictureToView(LinearLayout layout) {
-        for(int i = 0; i< 100; i++) {
-            getFragmentManager().beginTransaction().add(R.id.homepage_main_view, PictureFragment.newInstance("Hi","BYE"), "Hello").commit();
-        }
+    // Currently just using sample pictures, but later needs to access database and use retrieved data to initialize
+    private void initializePictures() {
+        addPictureToView("Trevor: Hello Mr. Turtle! \nVladmir: Whoa, Dude. Mr. Turtle is my father", R.drawable.travel1, "Maldives Underwater", "June 17, 2014");
+        addPictureToView("Trevor: Swimming with the big fish", R.drawable.travel2, "Maldives Underwater", "June 17, 2014");
+        addPictureToView("", R.drawable.travel3, "Maldives Underwater", "June 17, 2014");
+        addPictureToView("Kramnik: Duuuuuude \nMelissa: First you were all like whoa, and we were like whoa, and you were like whoa...", R.drawable.travel4, "Maldives Underwater", "June 17, 2014");
+        addPictureToView("", R.drawable.travel5, "Maldives", "June 17, 2014");
+        addPictureToView("", R.drawable.travel6, "Maldives", "June 17, 2014");
+        addPictureToView("Trevor: Well... it's time to eat?\n Katie: Yeah, it's time for them to eat us", R.drawable.travel7, "Maldives", "June 17, 2014");
+    }
+
+    private void addPictureToView(String comment, int pictureId, String where, String when) {
+        PictureFragment newPic = PictureFragment.newInstance(comment, pictureId, where, when);
+
+        getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
     }
 }

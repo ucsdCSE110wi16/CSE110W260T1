@@ -3,10 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/picture"
+        android:layout_width="626dp"
+        android:layout_height="460dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/invalid_image"/>
+
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/where_when"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I shall be an awesome post with a picture, comments and other cool stuff!"
+        android:layout_alignBottom="@+id/picture"
+        android:layout_margin="5dp"
+        android:background="#80000000"
+        android:textColor="@color/colorPrimary"
+        android:text=""/>
+
+    <!--android:background="@color/colorPrimaryDark"-->
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_below="@+id/picture"
+        android:layout_margin="10dp"
+        android:text=""
         />
 
 </RelativeLayout>

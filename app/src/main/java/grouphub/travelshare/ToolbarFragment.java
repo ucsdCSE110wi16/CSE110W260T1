@@ -116,11 +116,15 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 if(buttonFoldersPressed) {
                     fragment = new HomepageFragment();
                     switchPage(fragment, "ToHomepage");
+                    resetButtonPress();
                 } else {
                     fragment = new FoldersFragment();
                     switchPage(fragment, "ToFolders");
+
+                    resetButtonPress();
+                    buttonFoldersPressed = true;
+                    buttonFolders.setTextColor(Color.BLUE);
                 }
-                buttonFoldersPressed = !buttonFoldersPressed;
                 break;
             case R.id.button_camera:
                 useCamera();
@@ -129,11 +133,15 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 if(buttonManagerPressed) {
                     fragment = new HomepageFragment();
                     switchPage(fragment, "ToHomepage");
+                    resetButtonPress();
                 } else {
                     fragment = new GroupFragment();
                     switchPage(fragment, "ToManager");
+
+                    resetButtonPress();
+                    buttonManagerPressed = true;
+                    buttonManager.setTextColor(Color.BLUE);
                 }
-                buttonManagerPressed = !buttonManagerPressed;
                 break;
             case R.id.button_views:
                 break;
@@ -141,6 +149,18 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    // Resets button presses (and for now button colors)
+    public void resetButtonPress() {
+        buttonManagerPressed = false;
+        buttonFoldersPressed = false;
+        buttonViewsPressed = false;
+
+        buttonManager.setTextColor(Color.WHITE);
+        buttonFolders.setTextColor(Color.WHITE);
+        buttonViews.setTextColor(Color.WHITE);
+    }
+
+    // I wonder if fragment is actually deleted or put into some background mode... may affect performance
     public void switchPage(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 

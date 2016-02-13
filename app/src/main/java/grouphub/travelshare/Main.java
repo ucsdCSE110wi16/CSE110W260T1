@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -48,11 +49,16 @@ public class Main extends AppCompatActivity implements AdapterView.OnItemSelecte
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
 
+        // Magic???
+        ((TextView)view).setText(null);
+
         switch(pos) {
             case 0:
-                Toast.makeText(parent.getContext(),
+                // There is a problem with this not showing up right away after pressing...
+                // must first exit out of app and return
+/*                Toast.makeText(parent.getContext(),
                         "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();*/
                 break;
             case 1:
                 // User chose the "logout_button" item, do the logout...

@@ -14,27 +14,40 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_alignParentTop="true" />
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"
+        android:padding="2dp"
+        android:background="@color/colorAccent"/>
 
     <TextView
         android:id="@+id/where_when"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/picture"
-        android:layout_margin="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
         android:background="#80000000"
         android:textColor="@color/colorPrimary"
         android:text=""/>
 
-    <!--android:background="@color/colorPrimaryDark"-->
-
-    <TextView
-        android:id="@+id/comment"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_below="@+id/picture"
-        android:layout_margin="10dp"
-        android:text=""
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/comment_background">
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:padding="10dp"
+            />
+
+    </ScrollView>
 
 </RelativeLayout>

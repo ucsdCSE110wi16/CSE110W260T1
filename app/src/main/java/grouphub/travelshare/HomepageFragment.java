@@ -68,7 +68,7 @@ public class HomepageFragment extends Fragment {
         addPictureToView("Kramnik: Duuuuuude \nMelissa: First you were all like whoa, and we were like whoa, and you were like whoa...", R.drawable.travel4, "Maldives Underwater", "June 17, 2014");
         addPictureToView("", R.drawable.travel5, "Maldives", "June 17, 2014");
         addPictureToView("", R.drawable.travel6, "Maldives", "June 17, 2014");
-        addPictureToView("Trevor: Well... it's time to eat?\n Katie: Yeah, it's time for them to eat us", R.drawable.travel7, "Maldives", "June 17, 2014");
+        addPictureToView("Trevor: Well... it's time to eat?\nKatie: Yeah, it's time for them to eat us", R.drawable.travel7, "Maldives", "June 17, 2014");
     }
 
     private void addPictureToView(String comment, int pictureId, String where, String when) {

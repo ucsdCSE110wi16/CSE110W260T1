@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 
 
 /**
@@ -20,6 +21,7 @@ public class App extends Application {
         Parse.enableLocalDatastore(this);
 
         // Initialize Parse so that it can be used in the application
+        ParseObject.registerSubclass(TravelGroup.class);
         Parse.initialize(this);
 
         ParseFacebookUtils.initialize(this);

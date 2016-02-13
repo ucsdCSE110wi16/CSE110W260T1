@@ -2,6 +2,7 @@ package grouphub.travelshare;
 
 import android.util.Log;
 
+import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -12,43 +13,39 @@ import java.util.ArrayList;
 /**
  * Created by Kenan Mesic and Christopher Chinowth on 1/30/2016.
  */
-public class TravelGroup {
-    private static final String TAG = "TravelGroup";
-    private String groupName;
-    private ParseUser leader;
-    private ArrayList<ParseObject> photos;
-    private ArrayList<String> users;
-    private String description;
-    private ParseObject currentGroup;
-    private String objectId;
 
+@ParseClassName("TravelGroup")
+public class TravelGroup extends ParseObject {
+    private static final String TAG = "TravelGroup";
+
+    // Default no arg constructor required by Parse subclass
+    public TravelGroup() {
+        super();
+    }
+
+    // Constructor to call usually for creating a TravelGroup
     public TravelGroup(ParseUser leader, String groupName) {
-        this.leader = leader;
-        this.groupName = groupName;
-        users = new ArrayList<String>();
-        users.add(leader.getUsername());
-        currentGroup = new ParseObject(TAG);
-        currentGroup.put("leader", leader);
-        currentGroup.put("groupName", groupName);
-        currentGroup.addAll("users", users);
-        ArrayList <ParseObject> groups = (ArrayList) this.leader.get("groups");
-        groups.add(0, currentGroup);
-        currentGroup.saveInBackground(new SaveCallback() {
+        super();
+        ArrayList<String> userNames = new ArrayList<String>();
+        userNames.add(leader.getUsername());
+        addAll("users", userNames);
+        put("leader", leader);
+        put("groupName", groupName);
+        ArrayList <TravelGroup> groups = (ArrayList) leader.get("groups");
+        groups.add(0, this);
+        this.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e == null) {
-                    objectId = currentGroup.getObjectId();
-                }
-                else {
+                if(e != null) {
                     Log.d(TAG, "Error in creating TravelGroup: " + e);
                 }
             }
         });
-        this.leader.put("groups", groups);
-        this.leader.saveInBackground(new SaveCallback() {
+        leader.put("groups", groups);
+        leader.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e != null) {
+                if (e != null) {
                     Log.d(TAG, "Error occured in updating leader with travel group");
                 }
             }
@@ -60,51 +57,60 @@ public class TravelGroup {
         return;
     }
 
+    // Return unique id of the object
+    public String getId() {
+        return getObjectId();
+    }
+
     //Add the current user logged in
     public void addUser(ParseUser user) {
-        users.add(user.getUsername());
+        // Create a list with user
         ArrayList<String> newUser = new ArrayList<String>();
         newUser.add(user.getUsername());
-        currentGroup.addAll("users", newUser );
-        ArrayList<ParseObject> groups = (ArrayList) user.get("groups");
-        groups.add(0, currentGroup);
-        currentGroup.saveInBackground();
+        addAll("users", newUser);
+        ArrayList<TravelGroup> groups = (ArrayList) user.get("groups");
+        groups.add(0, this);
+        saveInBackground();
         user.put("groups", groups);
         user.saveInBackground();
     }
 
+    // Get the description of the group
     public String getDescription() {
-        return description;
+        return getString("description");
     }
 
+    // Set the desciption of the group
     public void setDescription(String description) {
-        this.description = description;
-        currentGroup.put("description", description);
-        currentGroup.saveInBackground();
+        put("description", description);
+        saveInBackground();
     }
 
+    // Get the leader/admin of the group
     public ParseUser getLeader() {
-        return leader;
+        return getParseUser("leader");
     }
 
+    // Set the leader/admin of the group
     public void setLeader(ParseUser leader) {
-        this.leader = leader;
-        currentGroup.put("leader", leader);
-        currentGroup.saveInBackground();
+        put("leader", leader);
+        saveInBackground();
     }
 
+    // Get all the usernames of the users in the group
     public ArrayList<String> getUsers() {
-        return users;
+        return (ArrayList<String>) get("users");
     }
 
+    // Get the group name of the group
     public String getGroupName() {
-        return groupName;
+        return getString("groupName");
     }
 
+    // Set the group name
     public void setGroupName(String groupName) {
-        this.groupName = groupName;
-        currentGroup.put("groupName", groupName);
-        currentGroup.saveInBackground();
+        put("groupName", groupName);
+        saveInBackground();
     }
 
     public static TravelGroup getActiveTravelGroup(ParseUser user) {
@@ -115,9 +121,5 @@ public class TravelGroup {
     public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {
         //TODO: create method to return list of travel groups connected to user
         return null;
-    }
-
-    protected ParseObject getParseObject() {
-        return currentGroup;
     }
 }

@@ -193,7 +193,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 if (objects.size() == 1) {
                     ParseUser test = objects.get(0);
                     TravelGroup group = new TravelGroup(ParseUser.getCurrentUser(), "TEST");
-                    group.addUser(test);
+                    group.addUser(ParseUser.getCurrentUser());
                     Toast.makeText(Login.this, "SUCCESS", Toast.LENGTH_LONG).show();
                 }
             }

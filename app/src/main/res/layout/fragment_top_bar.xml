@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="grouphub.travelshare.TopBarFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/top_most_bar"
+        android:layout_gravity="center_horizontal|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/colorTitle"
+            android:textSize="24sp"
+            android:layout_centerInParent="true"/>
+
+        <Spinner
+            android:id="@+id/dropdown_menu"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="-3dp"
+            android:layout_marginTop="8dp"
+            android:background="#00000000"
+            android:spinnerMode="dropdown"
+            android:layout_alignParentRight="true"
+            android:entries="@array/down_down_menu_list"
+            android:prompt="@string/drop_down_prompt"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>

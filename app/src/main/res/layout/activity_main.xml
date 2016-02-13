@@ -8,6 +8,15 @@
     tools:context=".Main"
     >
 
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/fragment_top_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_horizontal|top" />
+
     <FrameLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
@@ -16,6 +25,8 @@
         android:layout_weight="100"
         android:orientation="horizontal"
         >
+
+
     </FrameLayout>
 
     <include

@@ -1,9 +1,11 @@
 package grouphub.travelshare;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -14,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +34,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private Button buttonManager;
     private Button buttonCamera;
     private Button buttonViews;
-    
+
     // All buttons start out as not being pressed
     private Boolean buttonFoldersPressed = false;
     private Boolean buttonManagerPressed = false;
@@ -113,7 +116,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
-                if(buttonFoldersPressed) {
+                if (buttonFoldersPressed) {
                     fragment = new HomepageFragment();
                     switchPage(fragment, "ToHomepage");
                     resetButtonPress();
@@ -130,7 +133,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 useCamera();
                 break;
             case R.id.button_manager:
-                if(buttonManagerPressed) {
+                if (buttonManagerPressed) {
                     fragment = new HomepageFragment();
                     switchPage(fragment, "ToHomepage");
                     resetButtonPress();
@@ -207,7 +210,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 // Image captured and saved to fileUri specified in the Intent
                 Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 70, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
                 byte[] image = stream.toByteArray();
 
                 // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE

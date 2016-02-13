@@ -2,76 +2,74 @@ package grouphub.travelshare;
 
 import android.util.Log;
 
-import com.parse.GetCallback;
-import com.parse.Parse;
+import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by kenme_000 on 2/6/2016.
  */
-public class PhotoLibrary {
-    private String objectid;
+@ParseClassName("PhotoLibrary")
+public class PhotoLibrary extends ParseObject {
     private static final String TAG = "PhotoLibrary";
-    private ParseObject photoLibrary;
-    private ArrayList<ParseObject> photosParse;
-    private ArrayList<Photo> photos;
+
+    /* Default no arg constructor required by Parse subclass
+    * DO NOT MODIFY ANY FIELDS IN THIS CONSTRUCTOR AS PARSE
+    * DOES NOT ALLOW IT
+    */
+    public PhotoLibrary() {
+        super();
+    }
 
     /*
      * Constructor for creating first every PhotoLibrary
+     * The parameter means nothing...its only there to
+     * distinguish between the default no arg constructor
+     * that is needed by Parse
      */
-    public PhotoLibrary() {
-        photoLibrary = new ParseObject(TAG);
-        photosParse = new ArrayList<ParseObject>();
-        photoLibrary.put("photos", photosParse);
-        photoLibrary.saveInBackground(new SaveCallback() {
+    public PhotoLibrary(boolean savePhotoLibrary) {
+        super();
+        ArrayList<Photo> photosParse = new ArrayList<Photo>();
+        put("photos", photosParse);
+        saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e == null) {
-                    objectid = photoLibrary.getObjectId();
-                } else {
+                if (e != null) {
                     Log.d(TAG, "Error creating PhotoLibrary: " + e);
-
                 }
 
             }
         });
-        photos = new ArrayList<Photo>();
     }
 
     /*
-     * Constructor for intializing a preexisting photo library that was store in the Parse database
+     * For grabbing a pre-existing photo library that was stored in the Parse database
      */
-    public PhotoLibrary(String id) {
-        this.objectid = id;
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(TAG);
-        query.getInBackground(id, new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    // object will be your game score
-                    photoLibrary = object;
-                    getPhotos();
-                } else {
-                    Log.d(TAG, "Error in retrieving Photo Library: " + e);
-                }
-            }
-        });
+    public static PhotoLibrary getPhotoLibrary(String id) {
+        ParseQuery<PhotoLibrary> query = ParseQuery.getQuery(TAG);
+        try {
+            return query.get(id);
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Failed grabbing the PhotoLibrary: " + e);
+            return null;
+        }
     }
 
+    // Get unique object id for the photo library
+    public String getId() {
+        return getObjectId();
+    }
     /*
      * Add photo to the Photo Library in parse
      */
     public void addPhoto(Photo pic) {
-        photos.add(photos.size(), pic);
-        ParseObject photo = pic.getPhotoObject();
-        photosParse.add(0, photo);
-        photoLibrary.add("photos", photosParse);
-        photoLibrary.saveInBackground(new SaveCallback() {
+        add("photos", pic);
+        saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
@@ -85,28 +83,14 @@ public class PhotoLibrary {
     //TODO: need to add a max limit to num of photos getting received because user cannot view them
     //TODO: all
     public ArrayList<Photo> getPhotos() {
-        if(photoLibrary == null) {
-            Log.d(TAG, "Error: Did not initialize Photo Library correctly");
-            throw new NullPointerException();
-        }
-        // if photos were already received
-        else if(photos != null) {
-            return photos;
-        }
-        else {
-            photosParse = (ArrayList) photoLibrary.get("photos");
-            photos = new ArrayList<Photo>();
-            for(int i=0; i < photosParse.size(); i++) {
-                photos.add(i, new Photo(photosParse.get(i)));
-            }
-            return photos;
-        }
+        return (ArrayList<Photo>) get("photos");
     }
 
     //TODO: CHANGE THIS METHOD TO CALL CLOUD FUNCTION THAT CALCULATES THE MOST RECENT PHOTOS
-    public ArrayList<Photo> getMostRecentPhotos(int numPhotos) {
+    // OLD CODE MOVE THIS TO THE CLOUD...DO NOT USE
+    private ArrayList<Photo> getMostRecentPhotos(int numPhotos) {
         ArrayList<Photo> mostRecent =  new ArrayList<Photo>();
-        if(photos != null) {
+        /*if(photos != null) {
             for(int i=0; i < photos.size() && i < numPhotos; i++) {
                 mostRecent.add(i, photos.get(i));
             }
@@ -135,7 +119,7 @@ public class PhotoLibrary {
                     }).start();
                 }
             }
-        }
+        }*/
         return mostRecent;
     }
 }

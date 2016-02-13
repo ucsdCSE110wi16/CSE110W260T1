@@ -22,6 +22,8 @@ public class App extends Application {
 
         // Initialize Parse so that it can be used in the application
         ParseObject.registerSubclass(TravelGroup.class);
+        ParseObject.registerSubclass(PhotoLibrary.class);
+        ParseObject.registerSubclass(Photo.class);
         Parse.initialize(this);
 
         ParseFacebookUtils.initialize(this);

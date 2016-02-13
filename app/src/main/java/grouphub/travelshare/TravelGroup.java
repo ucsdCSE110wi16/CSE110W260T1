@@ -5,6 +5,7 @@ import android.util.Log;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -19,6 +20,8 @@ public class TravelGroup extends ParseObject {
     private static final String TAG = "TravelGroup";
 
     // Default no arg constructor required by Parse subclass
+    // DO NOT MODIFY ANY FIELDS IN THIS CONSTRUCTOR AS PARSE
+    // DOES NOT ALLOW IT
     public TravelGroup() {
         super();
     }
@@ -26,13 +29,9 @@ public class TravelGroup extends ParseObject {
     // Constructor to call usually for creating a TravelGroup
     public TravelGroup(ParseUser leader, String groupName) {
         super();
-        ArrayList<String> userNames = new ArrayList<String>();
-        userNames.add(leader.getUsername());
-        addAll("users", userNames);
+        add("users", leader.getUsername());
         put("leader", leader);
         put("groupName", groupName);
-        ArrayList <TravelGroup> groups = (ArrayList) leader.get("groups");
-        groups.add(0, this);
         this.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -41,7 +40,7 @@ public class TravelGroup extends ParseObject {
                 }
             }
         });
-        leader.put("groups", groups);
+        leader.add("groups", this);
         leader.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -50,6 +49,20 @@ public class TravelGroup extends ParseObject {
                 }
             }
         });
+    }
+
+    /*
+    * For grabbing a pre-existing Travel Group that was stored in the Parse database
+    */
+    public static TravelGroup getTravelGroup(String id) {
+        ParseQuery<TravelGroup> query = ParseQuery.getQuery(TAG);
+        try {
+            return query.get(id);
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Failed grabbing the TravelGroup: " + e);
+            return null;
+        }
     }
 
     //TODO send a request to invite a user
@@ -64,16 +77,23 @@ public class TravelGroup extends ParseObject {
 
     //Add the current user logged in
     public void addUser(ParseUser user) {
-        // Create a list with user
-        ArrayList<String> newUser = new ArrayList<String>();
-        newUser.add(user.getUsername());
-        addAll("users", newUser);
-        ArrayList<TravelGroup> groups = (ArrayList) user.get("groups");
-        groups.add(0, this);
-        saveInBackground();
-        user.put("groups", groups);
-        user.saveInBackground();
-    }
+        add("users", user.getUsername());
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.d(TAG, "Error in adding user to travel group: " + e);
+                }
+            }
+        });        user.add("groups", this);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.d(TAG, "Error adding travel group to user: " + e);
+                }
+            }
+        });    }
 
     // Get the description of the group
     public String getDescription() {
@@ -83,8 +103,14 @@ public class TravelGroup extends ParseObject {
     // Set the desciption of the group
     public void setDescription(String description) {
         put("description", description);
-        saveInBackground();
-    }
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.d(TAG, "Error setting the group description: " + e);
+                }
+            }
+        });    }
 
     // Get the leader/admin of the group
     public ParseUser getLeader() {
@@ -94,8 +120,14 @@ public class TravelGroup extends ParseObject {
     // Set the leader/admin of the group
     public void setLeader(ParseUser leader) {
         put("leader", leader);
-        saveInBackground();
-    }
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.d(TAG, "Error setting group leader: " + e);
+                }
+            }
+        });    }
 
     // Get all the usernames of the users in the group
     public ArrayList<String> getUsers() {
@@ -110,8 +142,14 @@ public class TravelGroup extends ParseObject {
     // Set the group name
     public void setGroupName(String groupName) {
         put("groupName", groupName);
-        saveInBackground();
-    }
+        saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.d(TAG, "Error setting group name: " + e);
+                }
+            }
+        });    }
 
     public static TravelGroup getActiveTravelGroup(ParseUser user) {
         //TODO: create method to return active Travel Group of user

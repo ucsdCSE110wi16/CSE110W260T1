@@ -185,7 +185,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     public void successfulLogin() {
         Toast.makeText(Login.this, "Logged in successfully!", Toast.LENGTH_LONG).show();
-       /* ParseQuery<ParseUser> userList = ParseUser.getQuery();
+        /*ParseQuery<ParseUser> userList = ParseUser.getQuery();
         userList.whereEqualTo("username", "test@gmail.com");
         userList.findInBackground(new FindCallback<ParseUser>() {
             @Override

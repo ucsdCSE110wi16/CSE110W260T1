@@ -19,8 +19,10 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -28,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -52,25 +55,44 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 JSONObject object,
                                 GraphResponse response) {
                             try {
-                                String email = (String) object.get("email");
-                                String name = (String) object.get("name");
-                                ParseUser user = new ParseUser();
-                                // user.setEmail(email);
-                                user.setPassword("F");
-                                user.setUsername(email);
+                                final String email = (String) object.get("email");
+                                final String name = (String) object.get("name");
 
-                                user.put("screenName", name);
+                                // check if the user already exists in the database, if they do, no need to sign them up, just log them in
+                                ParseQuery<ParseUser> query = ParseUser.getQuery();
+                                query.whereEqualTo("username", email);
+                                query.findInBackground(new FindCallback<ParseUser>() {
 
-                                user.signUpInBackground(new SignUpCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
+                                    public void done(List<ParseUser> objects, ParseException e) {
                                         if (e == null) {
-                                            successfulLogin();
+                                            // The query was successful. Don't sign the user up, just log them in.
+                                            login(true, email);
                                         } else {
-                                            Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                            // The user was not found. Go ahead and sign them up
+                                            // sign the facebook user up via parse
+                                            ParseUser user = new ParseUser();
+                                            user.setEmail(email);
+                                            user.setPassword("F");
+                                            user.setUsername(email);
+
+                                            user.put("screenName", name);
+
+                                            user.signUpInBackground(new SignUpCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if (e == null) {
+                                                        successfulLogin();
+                                                    } else {
+                                                        Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+
                                         }
                                     }
+
                                 });
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -135,9 +157,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     // Returns true if correct login and false otherwise
-    private void login() {
-        String password = this.password.getText().toString();
-        String email = this.email.getText().toString();
+    private void login(boolean isFacebookLogin, String possibleEmail) {
+        String email, password;
+
+        // if the login is a facebook login, set the email to the email acquired via Facebook
+        if (isFacebookLogin) {
+            email = possibleEmail;
+            password = "F";
+        } else {
+            password = this.password.getText().toString();
+            email = this.email.getText().toString();
+        }
 
         ParseUser.logInInBackground(email, password, new LogInCallback() {
             @Override
@@ -154,7 +184,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void successfulLogin() {
-        Toast.makeText(Login.this, "HORRAY YOU LOGINED IN", Toast.LENGTH_LONG).show();
+        Toast.makeText(Login.this, "Logged in successfully!", Toast.LENGTH_LONG).show();
        /* ParseQuery<ParseUser> userList = ParseUser.getQuery();
         userList.whereEqualTo("username", "test@gmail.com");
         userList.findInBackground(new FindCallback<ParseUser>() {
@@ -179,7 +209,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId() ){
             case R.id.loginButton:
-                login();
+                login(false, "");
                 break;
             case R.id.signupButton:
                 Intent intent_signup = new Intent(Login.this, Signup.class);

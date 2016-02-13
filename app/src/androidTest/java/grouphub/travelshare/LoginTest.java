@@ -37,12 +37,12 @@ public class LoginTest {
         onView(withId(R.id.loginButton)).perform(click());
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(8000);
         }catch(InterruptedException e) {
             e.printStackTrace();
         }
 
-        onView(withText("I shall become a homepage")).check(matches(withText("I shall become a homepage")));
+        onView(withId(R.id.homepage_main_view)).check(matches(withId(R.id.homepage_main_view)));
 
     }
 

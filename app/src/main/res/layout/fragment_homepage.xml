@@ -38,7 +38,7 @@
                 android:id="@+id/group_name_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="group name"
+                android:text="Team Numero Uno"
                 android:textColor="@color/colorTitle"
                 android:textSize="15sp"
                 android:layout_centerInParent="true" />

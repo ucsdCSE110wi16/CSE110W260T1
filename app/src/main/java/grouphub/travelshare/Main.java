@@ -3,13 +3,7 @@ package grouphub.travelshare;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.AdapterView;
@@ -17,9 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.view.View;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import com.facebook.login.LoginManager;
+import com.parse.ParseUser;
 //import android.widget.Toolbar;
 
 
@@ -57,9 +55,14 @@ public class Main extends AppCompatActivity implements AdapterView.OnItemSelecte
                         Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                Toast.makeText(parent.getContext(),
-                        "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
-                        Toast.LENGTH_SHORT).show();
+                // User chose the "logout_button" item, do the logout...
+                LoginManager.getInstance().logOut(); // logout facebook
+                ParseUser.logOutInBackground(); // logout parse user
+
+                // then take the user back to login screen
+                Intent login_intent = new Intent(Main.this, Login.class);
+                startActivity(login_intent);
+                finish();
                 break;
         }
     }

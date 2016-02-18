@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,9 +175,14 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     }
 
     public void useCamera() {
+
         //start listening for user location.
         initializeLocationListener();
-        locationManager.requestLocationUpdates(locationProvider, 5000, 0, locationListener);
+
+        //must check for permissions at run time.
+        if(checkLocationPermission())
+            locationManager.requestLocationUpdates(locationProvider, 5000, 0, locationListener);
+
         // do camera stuff
         // this code will test if the camera interface code will work
         Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -185,6 +191,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         File image = new File(imagesFolder, "tempImage.jpg");
         uriSavedImage = Uri.fromFile(image);
         imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+
         startActivityForResult(imageIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
@@ -195,7 +202,10 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 //get location
                 Location currentLoc = getCurrentLocation();
                 //stop listening for location updates
-                locationManager.removeUpdates(locationListener);
+
+                //must check for permissions at runtime
+                if(checkLocationPermission())
+                    locationManager.removeUpdates(locationListener);
 
                 if(currentLoc != null) {
                     // print out latitude and longitude to log
@@ -221,7 +231,9 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
             } else {
                 // Image capture failed, advise user
             }
+
         }
+
     }
     /*Create our location listener we can call for retrieving current user location*/
     public void initializeLocationListener(){
@@ -249,7 +261,11 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     location if it can get location*/
     private Location getCurrentLocation(){
 
-        Location currentLoc = locationManager.getLastKnownLocation(locationProvider);
+        Location currentLoc = null;
+
+        //must check for permission at run time.
+        if(checkLocationPermission())
+            currentLoc = locationManager.getLastKnownLocation(locationProvider);
 
         if (currentLoc != null){
             lastKnownLocation = currentLoc;
@@ -259,5 +275,14 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private boolean checkLocationPermission()
+    {
+
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = getContext().checkCallingPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+
+        //todo Handle case where permission isn't granted, popup to user or something
+    }
 
 }

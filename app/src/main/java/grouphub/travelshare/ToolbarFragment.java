@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -190,7 +191,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         initializeLocationListener();
 
         //must check for permissions at run time.
-        if(checkLocationPermission())
+        if((int) Build.VERSION.SDK_INT < 23 ||checkLocationPermission())
             locationManager.requestLocationUpdates(locationProvider, 5000, 0, locationListener);
 
         // do camera stuff
@@ -214,7 +215,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 //stop listening for location updates
 
                 //must check for permissions at runtime
-                if(checkLocationPermission())
+                if((int) Build.VERSION.SDK_INT < 23 || checkLocationPermission())
                     locationManager.removeUpdates(locationListener);
 
                 if(currentLoc != null) {
@@ -274,7 +275,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         Location currentLoc = null;
 
         //must check for permission at run time.
-        if(checkLocationPermission())
+        if((int) Build.VERSION.SDK_INT < 23 || checkLocationPermission())
             currentLoc = locationManager.getLastKnownLocation(locationProvider);
 
         if (currentLoc != null){

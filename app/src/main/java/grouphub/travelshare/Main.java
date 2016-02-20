@@ -1,22 +1,14 @@
 package grouphub.travelshare;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.facebook.login.LoginManager;
 import com.parse.ParseUser;
@@ -65,7 +57,7 @@ public class Main extends AppCompatActivity implements AdapterView.OnItemSelecte
             case 1:
                 // User chose the "logout_button" item, do the logout...
                 LoginManager.getInstance().logOut(); // logout facebook
-                ParseUser.logOutInBackground(); // logout parse user
+                ParseUser.logOut(); // logout parse user
 
                 // then take the user back to login screen
                 Intent login_intent = new Intent(Main.this, Login.class);

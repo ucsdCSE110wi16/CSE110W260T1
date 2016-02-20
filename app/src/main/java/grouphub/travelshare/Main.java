@@ -1,5 +1,6 @@
 package grouphub.travelshare;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -27,20 +28,21 @@ public class Main extends AppCompatActivity implements AdapterView.OnItemSelecte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // A new fragment manager must be created for each fragment operation
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        Fragment fragmentT = getFragmentManager().findFragmentById(R.id.fragment_toolbar);
+        Fragment fragmentH = getFragmentManager().findFragmentById(R.id.placeholder);
         setContentView(R.layout.activity_main);
 
         // Initialize homepage and toolbar fragments
-        fragmentTransaction.add(R.id.fragment_toolbar, new ToolbarFragment());
-        fragmentTransaction.add(R.id.placeholder, new HomepageFragment());
 
+        fragmentH= new HomepageFragment();
+        fragmentT = new ToolbarFragment();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_toolbar, fragmentT);
+        fragmentTransaction.add(R.id.placeholder, fragmentH);
         fragmentTransaction.commit();
 
         Spinner spinner = (Spinner) findViewById(R.id.dropdown_menu);
         spinner.setOnItemSelectedListener(this);
-
     }
 
     // Spinner implementations

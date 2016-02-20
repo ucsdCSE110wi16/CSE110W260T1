@@ -2,6 +2,7 @@ package grouphub.travelshare;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -60,8 +61,14 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private Uri uriSavedImage;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
+    private Fragment homepageFragment,groupFragment, folderFragment = null;
+
     public ToolbarFragment() {
         // Required empty public constructor
+        homepageFragment = new HomepageFragment();
+        folderFragment = new FoldersFragment();
+        groupFragment = new GroupFragment();
+
     }
 
     /**
@@ -113,19 +120,21 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Fragment fragment;
+        FragmentManager Manager = getFragmentManager();
+        FragmentTransaction trans = Manager.beginTransaction();
 
         // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
                 if (buttonFoldersPressed) {
-                    fragment = new HomepageFragment();
-                    switchPage(fragment, "ToHomepage");
+                    trans.replace(R.id.placeholder, homepageFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     resetButtonPress();
                 } else {
-                    fragment = new FoldersFragment();
-                    switchPage(fragment, "ToFolders");
-
-                    resetButtonPress();
+                    trans.replace(R.id.placeholder, folderFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     buttonFoldersPressed = true;
                     buttonFolders.setTextColor(Color.BLUE);
                 }
@@ -135,13 +144,14 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.button_manager:
                 if (buttonManagerPressed) {
-                    fragment = new HomepageFragment();
-                    switchPage(fragment, "ToHomepage");
+                    trans.replace(R.id.placeholder, homepageFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     resetButtonPress();
                 } else {
-                    fragment = new GroupFragment();
-                    switchPage(fragment, "ToManager");
-
+                    trans.replace(R.id.placeholder, groupFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     resetButtonPress();
                     buttonManagerPressed = true;
                     buttonManager.setTextColor(Color.BLUE);

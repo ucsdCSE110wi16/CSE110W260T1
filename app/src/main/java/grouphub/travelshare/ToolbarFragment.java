@@ -137,7 +137,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     trans.addToBackStack(null);
                     trans.commit();
                     buttonFoldersPressed = true;
-                    buttonFolders.setTextColor(Color.BLUE);
                 }
                 break;
             case R.id.button_camera:
@@ -155,7 +154,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     trans.commit();
                     resetButtonPress();
                     buttonManagerPressed = true;
-                    buttonManager.setTextColor(Color.BLUE);
                 }
                 break;
             case R.id.button_views:
@@ -169,10 +167,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         buttonManagerPressed = false;
         buttonFoldersPressed = false;
         buttonViewsPressed = false;
-
-        buttonManager.setTextColor(Color.WHITE);
-        buttonFolders.setTextColor(Color.WHITE);
-        buttonViews.setTextColor(Color.WHITE);
     }
 
     // I wonder if fragment is actually deleted or put into some background mode... may affect performance

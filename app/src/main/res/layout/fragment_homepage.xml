@@ -29,19 +29,21 @@
             android:id="@+id/group_name_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:background="@drawable/group_name_bar"
-            android:layout_gravity="center_horizontal|top">
+            android:layout_gravity="center_horizontal|top"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="150dp"
+            android:layout_marginLeft ="10dp">
 
             <TextView
                 android:id="@+id/group_name_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Team Numero Uno"
-                android:textColor="@color/colorTitle"
+                android:text="Maldives! :D"
                 android:textSize="15sp"
-                android:layout_centerInParent="true" />
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
     </RelativeLayout>

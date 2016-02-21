@@ -33,8 +33,8 @@ public class Main extends AppCompatActivity implements AdapterView.OnItemSelecte
         fragmentTransaction.add(R.id.placeholder, fragmentH);
         fragmentTransaction.commit();
 
-        Spinner spinner = (Spinner) findViewById(R.id.dropdown_menu);
-        spinner.setOnItemSelectedListener(this);
+        //Spinner spinner = (Spinner) findViewById(R.id.dropdown_menu);
+        //spinner.setOnItemSelectedListener(this);
     }
 
     // Spinner implementations
@@ -44,7 +44,7 @@ public class Main extends AppCompatActivity implements AdapterView.OnItemSelecte
         // parent.getItemAtPosition(pos)
 
         // Magic???
-        ((TextView)view).setText(null);
+       // ((TextView)view).setText(null);
 
         switch(pos) {
             case 0:

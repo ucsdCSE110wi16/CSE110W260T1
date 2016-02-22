@@ -171,13 +171,17 @@ public class TravelGroup extends ParseObject {
 
     public static TravelGroup getActiveTravelGroup(ParseUser user) {
         //TODO: create method to return active Travel Group of user
+
         ArrayList<TravelGroup> groups = (ArrayList<TravelGroup>) user.get("groups");
 
         if(groups.size() == 0) {
             return null;
         }
 
-        return groups.get(groups.size() - 1);
+        TravelGroup gr = groups.get(groups.size() - 1);
+
+        return gr;
+        //return groups.get(groups.size() - 1);
     }
 
     public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {

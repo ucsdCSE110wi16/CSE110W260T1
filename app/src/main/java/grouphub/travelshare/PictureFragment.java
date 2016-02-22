@@ -1,6 +1,8 @@
 package grouphub.travelshare;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,7 +17,7 @@ public class PictureFragment extends Fragment {
     View view;
 
     private String comment;
-    private int pictureId;
+    private byte[] picData;
     private String where;
     private String when;
 
@@ -23,11 +25,11 @@ public class PictureFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static PictureFragment newInstance(String paramComment, int paramPictureId, String paramWhere, String paramWhen) {
+    public static PictureFragment newInstance(String paramComment, byte[] picData, String paramWhere, String paramWhen) {
         PictureFragment fragment = new PictureFragment();
         Bundle args = new Bundle();
         args.putString("Comment", paramComment);
-        args.putInt("PictureId", paramPictureId);
+        args.putByteArray("PictureId", picData);
         args.putString("Where", paramWhere);
         args.putString("When", paramWhen);
         fragment.setArguments(args);
@@ -39,7 +41,7 @@ public class PictureFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         comment = getArguments().getString("Comment", "");
-        pictureId = getArguments().getInt("PictureId", 0);
+        picData = getArguments().getByteArray("PictureId");
         where = getArguments().getString("Where", "");
         when = getArguments().getString("When", "");
 
@@ -51,7 +53,8 @@ public class PictureFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_picture, container, false);
 
         ImageView iv = (ImageView) view.findViewById(R.id.picture);
-        iv.setImageResource(pictureId);
+        Bitmap bmp = BitmapFactory.decodeByteArray(picData, 0, picData.length);
+        iv.setImageBitmap(bmp);
         TextView tv_comment = (TextView) view.findViewById(R.id.comment);
         tv_comment.setText(comment);
         TextView tv_where_when = (TextView) view.findViewById(R.id.where_when);

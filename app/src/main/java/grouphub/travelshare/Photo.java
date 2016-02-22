@@ -205,4 +205,12 @@ public class Photo extends ParseObject {
             return null;
         }
     }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public String getDate() {
+        return date;
+    }
 }

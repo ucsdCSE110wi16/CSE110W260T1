@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+
 public class HomepageFragment extends Fragment {
     View view;
     LinearLayout mainView;
@@ -66,17 +70,30 @@ public class HomepageFragment extends Fragment {
 
     // Currently just using sample pictures, but later needs to access database and use retrieved data to initialize
     private void initializePictures() {
-        addPictureToView("Trevor: Hello Mr. Turtle! \nVladmir: Whoa, Dude. Mr. Turtle is my father", R.drawable.travel1, "Maldives Underwater", "June 17, 2014");
-        addPictureToView("Trevor: Swimming with the big fish", R.drawable.travel2, "Maldives Underwater", "June 17, 2014");
-        addPictureToView("", R.drawable.travel3, "Maldives Underwater", "June 17, 2014");
-        addPictureToView("Kramnik: Duuuuuude \nMelissa: First you were all like whoa, and we were like whoa, and you were like whoa...", R.drawable.travel4, "Maldives Underwater", "June 17, 2014");
-        addPictureToView("", R.drawable.travel5, "Maldives", "June 17, 2014");
-        addPictureToView("", R.drawable.travel6, "Maldives", "June 17, 2014");
-        addPictureToView("Trevor: Well... it's time to eat?\nKatie: Yeah, it's time for them to eat us", R.drawable.travel7, "Maldives", "June 17, 2014");
+        // Get photos from parse
+        TravelGroup gr = TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser());
+        ArrayList<Photo> photos = gr.getPhotos();
+
+        for(int i = photos.size()-1; i >= 0; i--) {
+            addPictureToView(photos.get(i));
+        }
+
+//        addPictureToView("Trevor: Hello Mr. Turtle! \nVladmir: Whoa, Dude. Mr. Turtle is my father", R.drawable.travel1, "Maldives Underwater", "June 17, 2014");
+//        addPictureToView("Trevor: Swimming with the big fish", R.drawable.travel2, "Maldives Underwater", "June 17, 2014");
+//        addPictureToView("", R.drawable.travel3, "Maldives Underwater", "June 17, 2014");
+//        addPictureToView("Kramnik: Duuuuuude \nMelissa: First you were all like whoa, and we were like whoa, and you were like whoa...", R.drawable.travel4, "Maldives Underwater", "June 17, 2014");
+//        addPictureToView("", R.drawable.travel5, "Maldives", "June 17, 2014");
+//        addPictureToView("", R.drawable.travel6, "Maldives", "June 17, 2014");
+//        addPictureToView("Trevor: Well... it's time to eat?\nKatie: Yeah, it's time for them to eat us", R.drawable.travel7, "Maldives", "June 17, 2014");
     }
 
-    private void addPictureToView(String comment, int pictureId, String where, String when) {
-        PictureFragment newPic = PictureFragment.newInstance(comment, pictureId, where, when);
+//    private void addPictureToView(String comment, int pictureId, String where, String when) {
+//        PictureFragment newPic = PictureFragment.newInstance(comment, pictureId, where, when);
+//        getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
+//    }
+
+    private void addPictureToView(Photo photo) {
+        PictureFragment newPic = PictureFragment.newInstance("", photo.getPicData(), photo.getCityName(), photo.getDate());
         getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
     }
 }

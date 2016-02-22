@@ -29,9 +29,11 @@ public class TravelGroup extends ParseObject {
     // Constructor to call usually for creating a TravelGroup
     public TravelGroup(ParseUser leader, String groupName) {
         super();
+        PhotoLibrary photoLibrary = new PhotoLibrary(true);
         add("users", leader.getUsername());
         put("leader", leader);
         put("groupName", groupName);
+        put("photolibrary", photoLibrary);
         this.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -85,7 +87,8 @@ public class TravelGroup extends ParseObject {
                     Log.d(TAG, "Error in adding user to travel group: " + e);
                 }
             }
-        });        user.add("groups", this);
+        });
+        user.add("groups", this);
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -93,7 +96,8 @@ public class TravelGroup extends ParseObject {
                     Log.d(TAG, "Error adding travel group to user: " + e);
                 }
             }
-        });    }
+        });
+    }
 
     // Get the description of the group
     public String getDescription() {
@@ -110,11 +114,23 @@ public class TravelGroup extends ParseObject {
                     Log.d(TAG, "Error setting the group description: " + e);
                 }
             }
-        });    }
+        });
+    }
 
     // Get the leader/admin of the group
     public ParseUser getLeader() {
         return getParseUser("leader");
+    }
+
+    // Add photo which will add it to the photo library
+    public void addPhoto(Photo pic) {
+        PhotoLibrary lib = getPhotoLibrary();
+        lib.addPhoto(pic);
+    }
+
+    // Get the current photoLibrary
+    public PhotoLibrary getPhotoLibrary() {
+        return (PhotoLibrary) getParseObject("photolibrary");
     }
 
     // Set the leader/admin of the group
@@ -149,15 +165,28 @@ public class TravelGroup extends ParseObject {
                     Log.d(TAG, "Error setting group name: " + e);
                 }
             }
-        });    }
+        });
+    }
+
 
     public static TravelGroup getActiveTravelGroup(ParseUser user) {
         //TODO: create method to return active Travel Group of user
-        return null;
+        ArrayList<TravelGroup> groups = (ArrayList<TravelGroup>) user.get("groups");
+
+        if(groups.size() == 0) {
+            return null;
+        }
+
+        return groups.get(groups.size() - 1);
     }
 
     public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {
         //TODO: create method to return list of travel groups connected to user
         return null;
+    }
+
+    // Get all photos from photo library
+    public ArrayList<Photo> getPhotos() {
+        return getPhotoLibrary().getPhotos();
     }
 }

@@ -3,4 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="topbar_height">40dp</dimen>
+    <dimen name="spinner_margins">10dp</dimen>
+    <dimen name="group_name_bar_margins_left">95dp</dimen>
+    <dimen name="group_name_bar_margins_right">95dp</dimen>
 </resources>

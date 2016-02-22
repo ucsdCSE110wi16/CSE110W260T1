@@ -55,7 +55,8 @@
             android:name=".Main"
             android:label="Homepage"
             android:parentActivityName=".Login"
-            android:configChanges="orientation|screenLayout|layoutDirection|screenSize|keyboard|keyboardHidden">
+            android:configChanges="orientation|screenLayout|layoutDirection|screenSize|keyboard|keyboardHidden"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Main" />

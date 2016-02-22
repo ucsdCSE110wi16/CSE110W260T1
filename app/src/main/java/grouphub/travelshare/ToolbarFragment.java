@@ -2,6 +2,7 @@ package grouphub.travelshare;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -60,8 +62,14 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private Uri uriSavedImage;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
+    private Fragment homepageFragment,groupFragment, folderFragment = null;
+
     public ToolbarFragment() {
         // Required empty public constructor
+        homepageFragment = new HomepageFragment();
+        folderFragment = new FoldersFragment();
+        groupFragment = new GroupFragment();
+
     }
 
     /**
@@ -113,21 +121,22 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Fragment fragment;
+        FragmentManager Manager = getFragmentManager();
+        FragmentTransaction trans = Manager.beginTransaction();
 
         // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
                 if (buttonFoldersPressed) {
-                    fragment = new HomepageFragment();
-                    switchPage(fragment, "ToHomepage");
+                    trans.replace(R.id.placeholder, homepageFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     resetButtonPress();
                 } else {
-                    fragment = new FoldersFragment();
-                    switchPage(fragment, "ToFolders");
-
-                    resetButtonPress();
+                    trans.replace(R.id.placeholder, folderFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     buttonFoldersPressed = true;
-                    buttonFolders.setTextColor(Color.BLUE);
                 }
                 break;
             case R.id.button_camera:
@@ -135,16 +144,16 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.button_manager:
                 if (buttonManagerPressed) {
-                    fragment = new HomepageFragment();
-                    switchPage(fragment, "ToHomepage");
+                    trans.replace(R.id.placeholder, homepageFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     resetButtonPress();
                 } else {
-                    fragment = new GroupFragment();
-                    switchPage(fragment, "ToManager");
-
+                    trans.replace(R.id.placeholder, groupFragment);
+                    trans.addToBackStack(null);
+                    trans.commit();
                     resetButtonPress();
                     buttonManagerPressed = true;
-                    buttonManager.setTextColor(Color.BLUE);
                 }
                 break;
             case R.id.button_views:
@@ -158,10 +167,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         buttonManagerPressed = false;
         buttonFoldersPressed = false;
         buttonViewsPressed = false;
-
-        buttonManager.setTextColor(Color.WHITE);
-        buttonFolders.setTextColor(Color.WHITE);
-        buttonViews.setTextColor(Color.WHITE);
     }
 
     // I wonder if fragment is actually deleted or put into some background mode... may affect performance
@@ -180,7 +185,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         initializeLocationListener();
 
         //must check for permissions at run time.
-        if(checkLocationPermission())
+        if((int) Build.VERSION.SDK_INT < 23 ||checkLocationPermission())
             locationManager.requestLocationUpdates(locationProvider, 5000, 0, locationListener);
 
         // do camera stuff
@@ -204,7 +209,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 //stop listening for location updates
 
                 //must check for permissions at runtime
-                if(checkLocationPermission())
+                if((int) Build.VERSION.SDK_INT < 23 || checkLocationPermission())
                     locationManager.removeUpdates(locationListener);
 
                 if(currentLoc != null) {
@@ -264,7 +269,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         Location currentLoc = null;
 
         //must check for permission at run time.
-        if(checkLocationPermission())
+        if((int) Build.VERSION.SDK_INT < 23 || checkLocationPermission())
             currentLoc = locationManager.getLastKnownLocation(locationProvider);
 
         if (currentLoc != null){

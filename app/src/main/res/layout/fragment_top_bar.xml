@@ -6,29 +6,26 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/topbar_height"
         android:background="@drawable/top_most_bar"
         android:layout_gravity="center_horizontal|top">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/colorTitle"
-            android:textSize="24sp"
-            android:layout_centerInParent="true"/>
-
+        <!-- Why prompt??? -->
+        <!-- overlap anchor for api >= 21-->
         <Spinner
             android:id="@+id/dropdown_menu"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="-3dp"
-            android:layout_marginTop="8dp"
-            android:background="#00000000"
-            android:spinnerMode="dropdown"
+            android:background="@drawable/custom_setting"
+            android:layout_width="@dimen/topbar_height"
+            android:layout_height="@dimen/topbar_height"
+            android:drawSelectorOnTop="true"
+            android:overlapAnchor="false"
+            android:prompt="@string/app_name"
+            android:layout_marginRight="@dimen/spinner_margins"
+            android:layout_marginEnd="@dimen/spinner_margins"
+            android:layout_marginBottom="2dp"
             android:layout_alignParentRight="true"
-            android:entries="@array/down_down_menu_list"
-            android:prompt="@string/drop_down_prompt"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             />
 
     </RelativeLayout>

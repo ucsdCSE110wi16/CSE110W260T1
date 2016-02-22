@@ -11,6 +11,6 @@
     <item
         android:id="@+id/logout_button"
         android:orderInCategory="90"
-        android:title="@string/logout"
+        android:title="Logout"
         app:showAsAction="never" />
 </menu>

@@ -27,6 +27,7 @@ public class HomepageFragment extends Fragment {
 
     public HomepageFragment() {
         // Required empty public constructor
+        view = null;
     }
 
     public static HomepageFragment newInstance(String param1, String param2) {
@@ -51,11 +52,14 @@ public class HomepageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        mainView = (LinearLayout) view.findViewById(R.id.homepage_main_view);
+        if (null == view) {
+            view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        initializePictures();
+            mainView = (LinearLayout) view.findViewById(R.id.homepage_main_view);
+
+            initializePictures();
+        }
 
         return view;
     }
@@ -73,7 +77,6 @@ public class HomepageFragment extends Fragment {
 
     private void addPictureToView(String comment, int pictureId, String where, String when) {
         PictureFragment newPic = PictureFragment.newInstance(comment, pictureId, where, when);
-
         getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
     }
 }

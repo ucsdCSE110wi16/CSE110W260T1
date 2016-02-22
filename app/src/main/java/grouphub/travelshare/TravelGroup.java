@@ -182,7 +182,7 @@ public class TravelGroup extends ParseObject {
 
     public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {
         //TODO: create method to return list of travel groups connected to user
-        return null;
+        return (ArrayList<TravelGroup>) user.get("groups");
     }
 
     // Get all photos from photo library

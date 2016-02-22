@@ -5,11 +5,10 @@
     tools:context=".GroupFragment"
     android:id="@+id/groupFrag">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I shall be a group manager page"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:id="@+id/button_creategroup"
+        android:background="@drawable/custom_button" />
 
 </FrameLayout>

@@ -1,12 +1,20 @@
 package grouphub.travelshare;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.parse.ParseUser;
 
 
 /**
@@ -17,7 +25,11 @@ import android.view.ViewGroup;
  * Use the {@link GroupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupFragment extends Fragment {
+public class GroupFragment extends Fragment implements View.OnClickListener{
+    private Activity act;
+    private View view;
+    private Button button_creategroup;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -63,15 +75,27 @@ public class GroupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_group, container, false);
+
+        button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
+        button_creategroup.setOnClickListener(this);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group, container, false);
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onClick(View view) {
+        // For the functionality of the buttons
+        switch (view.getId()) {
+            case R.id.button_creategroup:
+
+                TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
+                Toast.makeText(act, "Group Created", Toast.LENGTH_LONG).show();
+                break;
         }
+
     }
 
     @Override
@@ -83,6 +107,8 @@ public class GroupFragment extends Fragment {
             //throw new RuntimeException(context.toString()
             //        + " must implement OnFragmentInteractionListener");
         }
+
+        act = this.getActivity();
     }
 
     @Override

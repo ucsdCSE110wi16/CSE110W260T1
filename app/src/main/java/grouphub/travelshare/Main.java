@@ -1,10 +1,14 @@
 package grouphub.travelshare;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -43,6 +47,11 @@ public class Main extends AppCompatActivity {
         fragmentTransaction.add(R.id.placeholder, fragmentH);
         fragmentTransaction.commit();
 
+        //request permissions
+        checkCameraPermissions();
+        checkStoragePermissions();
+        checkLocationPermissions();
+
         // Spinner implementation
         dropdown = (Spinner) findViewById(R.id.dropdown_menu);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -75,6 +84,42 @@ public class Main extends AppCompatActivity {
         });
 
         dropdown.setAdapter(new ArrayAdapter<String>(Main.this, R.layout.spinner_layout, menu_items));
+    }
+
+    protected void checkCameraPermissions(){
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 1);
+
+        }
+
+    }
+
+    protected void checkLocationPermissions(){
+
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+        }
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 3);
+        }
+
+    }
+
+    protected void checkStoragePermissions(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4);
+        }
     }
 
 }

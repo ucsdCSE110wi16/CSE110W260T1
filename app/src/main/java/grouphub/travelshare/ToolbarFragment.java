@@ -1,6 +1,7 @@
 package grouphub.travelshare;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -10,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,12 +28,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import com.parse.ParseClassName;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
     View view;
+    Activity act;
 
     // Declare toolbar buttons
     private Button buttonFolders;
@@ -228,8 +241,23 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] image = stream.toByteArray();
 
+
+                List<Address> addresses = null;
+                String cityName = "";
+                Geocoder geocoder = new Geocoder(act, Locale.getDefault());
+                try {
+                    addresses = geocoder.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 1);
+                    cityName = addresses.get(0).getAddressLine(0);
+                } catch(Exception e) {}
+
+                Calendar c = Calendar.getInstance();
+                String date = c.get(Calendar.DATE) + "";
+
                 // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
                 // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
+                Photo photo = new Photo(cityName,date,image, ParseUser.getCurrentUser());
+                TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
+
 
             } else if (resultCode == 0) {
 
@@ -288,6 +316,12 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         return (res == PackageManager.PERMISSION_GRANTED);
 
         //todo Handle case where permission isn't granted, popup to user or something
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        act = this.getActivity();
     }
 
 }

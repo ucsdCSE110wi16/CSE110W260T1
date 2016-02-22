@@ -14,6 +14,7 @@ import com.parse.ProgressCallback;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by kenme_000 on 2/7/2016.
@@ -21,8 +22,8 @@ import java.util.ArrayList;
 @ParseClassName("Photo")
 public class Photo extends ParseObject {
     private String objectid;
-    private double latitude;
-    private double longitude;
+    private String cityName;
+    private String date;
     private static final String TAG = "PhotoLibrary";
     private ParseObject photoObject;
     private ParseFile pic;
@@ -41,15 +42,20 @@ public class Photo extends ParseObject {
     /*
      * Constructor to use when constructing a Photo object
      */
-    public Photo(Location geolocation, byte[] data, ParseUser creater, ProgressDialog dialog) {
+    public Photo(String cityName, String date, byte[] data, ParseUser creater) {
         super();
+
+        this.cityName = cityName;
+        this.date = date;
+
+        Calendar c = Calendar.getInstance();
+        String unique = c.get(Calendar.DATE) + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.MILLISECOND) + "";
+
         ArrayList<ParseObject> comments = new ArrayList<ParseObject>();
-        ParseFile pic = new ParseFile(creater.get("screenName") + ".jpg", data);
+        ParseFile pic = new ParseFile(creater.get("screenName") + unique + ".jpg", data);
         put("comments", comments);
-        double latitude = geolocation.getLatitude();
-        double longitude = geolocation.getLongitude();
-        put("latitude", latitude);
-        put("longitude", longitude);
+        put("cityName", cityName);
+        put("date", date);
         put("pic", pic);
         //SAVE PIC THEN ONCE DONE, PERFORM SAVE ON THE PHOTO OBJECT
         pic.saveInBackground(new SaveCallback() {

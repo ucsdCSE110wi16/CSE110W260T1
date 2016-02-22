@@ -27,5 +27,8 @@ public class App extends Application {
         Parse.initialize(this);
 
         ParseFacebookUtils.initialize(this);
+
     }
+
+
 }

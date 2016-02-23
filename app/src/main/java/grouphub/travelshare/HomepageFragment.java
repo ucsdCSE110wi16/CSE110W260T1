@@ -29,6 +29,7 @@ public class HomepageFragment extends Fragment {
     View view;
     LinearLayout mainView;
 
+    private static final String TAG = "HomepageFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -97,7 +98,8 @@ public class HomepageFragment extends Fragment {
             }
         }
         else {
-            Log.d("HomeFragment", "NO GROUPS AVAILABLE FOR USER");
+            Log.d(TAG, "No groups listed for the user");
+            return;
         }
 //        addPictureToView("Trevor: Hello Mr. Turtle! \nVladmir: Whoa, Dude. Mr. Turtle is my father", R.drawable.travel1, "Maldives Underwater", "June 17, 2014");
 //        addPictureToView("Trevor: Swimming with the big fish", R.drawable.travel2, "Maldives Underwater", "June 17, 2014");

@@ -2,10 +2,15 @@ package grouphub.travelshare;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,8 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 public class HomepageFragment extends Fragment {
@@ -71,13 +78,27 @@ public class HomepageFragment extends Fragment {
     // Currently just using sample pictures, but later needs to access database and use retrieved data to initialize
     private void initializePictures() {
         // Get photos from parse
+        // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
+        // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
+        /*Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.travel4);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] image = stream.toByteArray();
+        Photo photo = new Photo("SD", "fa",image, ParseUser.getCurrentUser());
+        TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);*/
         TravelGroup gr = TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser());
-        ArrayList<Photo> photos = gr.getPhotos();
-
-        for(int i = photos.size()-1; i >= 0; i--) {
-            addPictureToView(photos.get(i));
+        if(gr != null) {
+            ArrayList<Photo> photos = gr.getPhotos();
+            if(photos == null) {
+                return;
+            }
+            for (int i = photos.size() - 1; i >= 0; i--) {
+                addPictureToView(photos.get(i));
+            }
         }
-
+        else {
+            Log.d("HomeFragment", "NO GROUPS AVAILABLE FOR USER");
+        }
 //        addPictureToView("Trevor: Hello Mr. Turtle! \nVladmir: Whoa, Dude. Mr. Turtle is my father", R.drawable.travel1, "Maldives Underwater", "June 17, 2014");
 //        addPictureToView("Trevor: Swimming with the big fish", R.drawable.travel2, "Maldives Underwater", "June 17, 2014");
 //        addPictureToView("", R.drawable.travel3, "Maldives Underwater", "June 17, 2014");

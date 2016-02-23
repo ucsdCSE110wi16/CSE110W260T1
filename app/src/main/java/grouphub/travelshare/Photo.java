@@ -149,12 +149,17 @@ public class Photo extends ParseObject {
      * Get the location of the Photo object
      */
     public Location getLocation() {
-        double latitude = Double.parseDouble(getString("latitude"));
-        double longitude = Double.parseDouble(getString("longitude"));
-        Location location = new Location(TAG);
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        return location;
+        try {
+            double latitude = Double.parseDouble(fetchIfNeeded().getString("latitude"));
+            double longitude = Double.parseDouble(fetchIfNeeded().getString("longitude"));
+            Location location = new Location(TAG);
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            return location;
+        }
+        catch(ParseException e) {
+            return null;
+        }
     }
 
     /*
@@ -197,7 +202,7 @@ public class Photo extends ParseObject {
      */
     public byte[] getPicData() {
         try {
-            ParseFile pic = getParseFile("pic");
+            ParseFile pic = fetchIfNeeded().getParseFile("pic");
             return pic.getData();
         }
         catch (ParseException e) {

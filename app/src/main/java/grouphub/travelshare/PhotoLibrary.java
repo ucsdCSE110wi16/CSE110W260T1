@@ -83,7 +83,12 @@ public class PhotoLibrary extends ParseObject {
     //TODO: need to add a max limit to num of photos getting received because user cannot view them
     //TODO: all
     public ArrayList<Photo> getPhotos() {
-        return (ArrayList<Photo>) this.get("photos");
+        try {
+            return (ArrayList<Photo>) fetchIfNeeded().get("photos");
+        }
+        catch (ParseException e) {
+            return null;
+        }
     }
 
     //TODO: CHANGE THIS METHOD TO CALL CLOUD FUNCTION THAT CALCULATES THE MOST RECENT PHOTOS

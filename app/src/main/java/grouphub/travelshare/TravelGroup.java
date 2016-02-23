@@ -125,12 +125,20 @@ public class TravelGroup extends ParseObject {
     // Add photo which will add it to the photo library
     public void addPhoto(Photo pic) {
         PhotoLibrary lib = getPhotoLibrary();
+        if(lib == null) {
+            return;
+        }
         lib.addPhoto(pic);
     }
 
     // Get the current photoLibrary
     public PhotoLibrary getPhotoLibrary() {
-        return (PhotoLibrary) getParseObject("photolibrary");
+        try {
+            return (PhotoLibrary) fetchIfNeeded().getParseObject("photolibrary");
+        }
+        catch(ParseException e) {
+            return null;
+        }
     }
 
     // Set the leader/admin of the group
@@ -143,7 +151,8 @@ public class TravelGroup extends ParseObject {
                     Log.d(TAG, "Error setting group leader: " + e);
                 }
             }
-        });    }
+        });
+    }
 
     // Get all the usernames of the users in the group
     public ArrayList<String> getUsers() {

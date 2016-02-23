@@ -87,6 +87,7 @@ public class PhotoLibrary extends ParseObject {
             return (ArrayList<Photo>) fetchIfNeeded().get("photos");
         }
         catch (ParseException e) {
+            Log.d(TAG, "Error in retrieving photos: " + e);
             return null;
         }
     }

@@ -101,7 +101,13 @@ public class TravelGroup extends ParseObject {
 
     // Get the description of the group
     public String getDescription() {
-        return getString("description");
+        try {
+            return fetchIfNeeded().getString("description");
+        }
+        catch (ParseException e) {
+            Log.d(TAG, "Error in retrieving description of group: " + e);
+            return null;
+        }
     }
 
     // Set the desciption of the group
@@ -119,7 +125,13 @@ public class TravelGroup extends ParseObject {
 
     // Get the leader/admin of the group
     public ParseUser getLeader() {
-        return getParseUser("leader");
+        try {
+            return fetchIfNeeded().getParseUser("leader");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in retrieving leader of group: " + e);
+            return null;
+        }
     }
 
     // Add photo which will add it to the photo library
@@ -137,6 +149,7 @@ public class TravelGroup extends ParseObject {
             return (PhotoLibrary) fetchIfNeeded().getParseObject("photolibrary");
         }
         catch(ParseException e) {
+            Log.d(TAG, "Error in retrieving the photo library: " + e);
             return null;
         }
     }
@@ -156,12 +169,24 @@ public class TravelGroup extends ParseObject {
 
     // Get all the usernames of the users in the group
     public ArrayList<String> getUsers() {
-        return (ArrayList<String>) get("users");
+        try {
+            return (ArrayList<String>) fetchIfNeeded().get("users");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in retrieving the list of users for the group: " + e);
+            return null;
+        }
     }
 
     // Get the group name of the group
     public String getGroupName() {
-        return getString("groupName");
+        try {
+            return fetchIfNeeded().getString("groupName");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in retrieving the group name: " + e);
+            return null;
+        }
     }
 
     // Set the group name
@@ -195,7 +220,13 @@ public class TravelGroup extends ParseObject {
 
     public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {
         //TODO: create method to return list of travel groups connected to user
-        return (ArrayList<TravelGroup>) user.get("groups");
+        try {
+            return (ArrayList<TravelGroup>) user.fetchIfNeeded().get("groups");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in retrieving the travel groups associated with the user: " +  e);
+            return null;
+        }
     }
 
     // Get all photos from photo library

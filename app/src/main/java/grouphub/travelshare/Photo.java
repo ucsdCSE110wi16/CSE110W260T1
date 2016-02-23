@@ -21,14 +21,7 @@ import java.util.Calendar;
  */
 @ParseClassName("Photo")
 public class Photo extends ParseObject {
-    private String objectid;
-    private String cityName;
-    private String date;
     private static final String TAG = "PhotoLibrary";
-    private ParseObject photoObject;
-    private ParseFile pic;
-    private ArrayList<ParseObject> comments;
-    private ParseUser creater;
 
     /*
      * Default no arg constructor required by Parse subclass
@@ -45,9 +38,6 @@ public class Photo extends ParseObject {
     public Photo(String cityName, String date, byte[] data, ParseUser creater) {
         super();
 
-        this.cityName = cityName;
-        this.date = date;
-
         Calendar c = Calendar.getInstance();
         String unique = c.get(Calendar.DATE) + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.MILLISECOND) + "";
 
@@ -57,6 +47,7 @@ public class Photo extends ParseObject {
         put("cityName", cityName);
         put("date", date);
         put("pic", pic);
+        put("creator", creater);
         //SAVE PIC THEN ONCE DONE, PERFORM SAVE ON THE PHOTO OBJECT
         pic.saveInBackground(new SaveCallback() {
             @Override
@@ -101,7 +92,7 @@ public class Photo extends ParseObject {
      * Set the picture for the photo object
      */
     public void setPic(byte[] data) {
-        ParseFile pic = new ParseFile(creater.get("screenName") + ".jpg", data);
+        ParseFile pic = new ParseFile(getObjectId().toString()+ ".jpg", data);
         //SAVE PIC THEN ONCE DONE, PERFORM SAVE ON THE PHOTO OBJECT
         pic.saveInBackground(new SaveCallback() {
             @Override
@@ -126,6 +117,20 @@ public class Photo extends ParseObject {
             }
         });
     }
+
+    /*
+     * Get the user that created the photo
+     */
+    public ParseUser getCreator() {
+        try {
+            return fetchIfNeeded().getParseUser("creator");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in retrieving the creator: " + e);
+            return null;
+        }
+    }
+
 
     /*
      * Set the location of the Photo object
@@ -212,10 +217,22 @@ public class Photo extends ParseObject {
     }
 
     public String getCityName() {
-        return cityName;
+        try {
+            return fetchIfNeeded().getString("cityName");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in getting city name: ");
+            return null;
+        }
     }
 
     public String getDate() {
-        return date;
+        try {
+            return fetchIfNeeded().getString("date");
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error in getting date: " + e);
+            return null;
+        }
     }
 }

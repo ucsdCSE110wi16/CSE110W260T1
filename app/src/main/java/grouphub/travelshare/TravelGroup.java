@@ -209,6 +209,7 @@ public class TravelGroup extends ParseObject {
         ArrayList<TravelGroup> groups = (ArrayList<TravelGroup>) user.get("groups");
 
         if(groups.size() == 0) {
+
             return null;
         }
 

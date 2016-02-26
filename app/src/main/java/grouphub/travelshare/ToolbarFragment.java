@@ -43,7 +43,6 @@ import java.util.Locale;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
     View view;
-    Activity act;
 
     // Declare toolbar buttons
     private Button buttonFolders;
@@ -238,14 +237,16 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 // Image captured and saved to fileUri specified in the Intent
                 Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); // 0 for small size, 100 for quality
+
                 byte[] image = stream.toByteArray();
 
 
                 List<Address> addresses = null;
                 String cityName = "";
-                Geocoder geocoder = new Geocoder(act, Locale.getDefault());
+                Geocoder geocoder;
                 try {
+                    geocoder = new Geocoder(getActivity(), Locale.getDefault());
                     addresses = geocoder.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 1);
                     cityName = addresses.get(0).getAddressLine(0);
                 } catch(Exception e) {}
@@ -257,7 +258,10 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
                 Photo photo = new Photo(cityName,date,image, ParseUser.getCurrentUser());
                 TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
-
+                bitmap.recycle();
+                try {
+                    stream.close();
+                } catch(Exception e) {}
 
             } else if (resultCode == 0) {
 
@@ -320,8 +324,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        act = this.getActivity();
     }
 
 }

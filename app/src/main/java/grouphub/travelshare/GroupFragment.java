@@ -26,7 +26,6 @@ import com.parse.ParseUser;
  * create an instance of this fragment.
  */
 public class GroupFragment extends Fragment implements View.OnClickListener{
-    private Activity act;
     private View view;
     private Button button_creategroup;
 
@@ -71,7 +70,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,13 +90,15 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
             case R.id.button_creategroup:
 
                 TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
-                Toast.makeText(act, "Group Created", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
                 break;
         }
 
     }
 
     @Override
+
+
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -107,8 +107,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
             //throw new RuntimeException(context.toString()
             //        + " must implement OnFragmentInteractionListener");
         }
-
-        act = this.getActivity();
     }
 
     @Override

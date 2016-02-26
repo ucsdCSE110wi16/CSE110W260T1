@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
@@ -27,7 +28,8 @@ import java.util.ArrayList;
 
 public class HomepageFragment extends Fragment {
     View view;
-    LinearLayout mainView;
+    //LinearLayout mainView;
+    ListView mainView;
 
     private static final String TAG = "HomepageFragment";
     private static final String ARG_PARAM1 = "param1";
@@ -68,7 +70,8 @@ public class HomepageFragment extends Fragment {
         if (null == view) {
             view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-            mainView = (LinearLayout) view.findViewById(R.id.homepage_main_view);
+            //mainView = (LinearLayout) view.findViewById(R.id.homepage_main_view);
+            mainView = (ListView) view.findViewById(R.id.listview_pictures);
 
             initializePictures();
         }
@@ -87,8 +90,10 @@ public class HomepageFragment extends Fragment {
         byte[] image = stream.toByteArray();
         Photo photo = new Photo("SD", "fa",image, ParseUser.getCurrentUser());
         TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);*/
-        TravelGroup gr = TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser());
-        if(gr != null) {
+        TravelGroup gr;
+
+        try {
+            gr = TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser());
             ArrayList<Photo> photos = gr.getPhotos();
             if(photos == null) {
                 return;
@@ -96,11 +101,10 @@ public class HomepageFragment extends Fragment {
             for (int i = photos.size() - 1; i >= 0; i--) {
                 addPictureToView(photos.get(i));
             }
-        }
-        else {
+        } catch (Exception e){
             Log.d(TAG, "No groups listed for the user");
-            return;
         }
+
 //        addPictureToView("Trevor: Hello Mr. Turtle! \nVladmir: Whoa, Dude. Mr. Turtle is my father", R.drawable.travel1, "Maldives Underwater", "June 17, 2014");
 //        addPictureToView("Trevor: Swimming with the big fish", R.drawable.travel2, "Maldives Underwater", "June 17, 2014");
 //        addPictureToView("", R.drawable.travel3, "Maldives Underwater", "June 17, 2014");
@@ -117,6 +121,7 @@ public class HomepageFragment extends Fragment {
 
     private void addPictureToView(Photo photo) {
         PictureFragment newPic = PictureFragment.newInstance("", photo.getPicData(), photo.getCityName(), photo.getDate());
-        getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
+        //getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
+
     }
 }

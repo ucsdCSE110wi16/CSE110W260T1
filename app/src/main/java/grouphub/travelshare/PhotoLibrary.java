@@ -1,5 +1,6 @@
 package grouphub.travelshare;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.parse.ParseClassName;

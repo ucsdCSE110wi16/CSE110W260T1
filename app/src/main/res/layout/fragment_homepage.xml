@@ -6,47 +6,31 @@
     tools:context="grouphub.travelshare.HomepageFragment">
 
     <RelativeLayout
+        android:id="@+id/group_name_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@drawable/group_name_bar"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/group_name_bar_margins_left"
+        android:layout_marginRight="@dimen/group_name_bar_margins_right">
 
-        <ScrollView
-            android:id="@+id/homepage_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/group_name_bar"
-            android:layout_marginTop="5dp">
-
-            <LinearLayout
-                android:id="@+id/homepage_main_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
-
-        </ScrollView>
-
-        <RelativeLayout
-            android:id="@+id/group_name_bar"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/group_name_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/group_name_bar"
-            android:layout_gravity="center_horizontal|top"
+            android:text="Maldives! :D"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/group_name_bar_margins_left"
-            android:layout_marginRight="@dimen/group_name_bar_margins_right">
-
-            <TextView
-                android:id="@+id/group_name_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Maldives! :D"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_gravity="center"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listview_pictures"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </FrameLayout>

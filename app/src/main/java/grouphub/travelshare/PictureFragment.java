@@ -54,6 +54,20 @@ public class PictureFragment extends Fragment {
 
         ImageView iv = (ImageView) view.findViewById(R.id.picture);
         Bitmap bmp = BitmapFactory.decodeByteArray(picData, 0, picData.length);
+
+/*
+        // http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(getResources(), bmp, options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+        String imageType = options.outMimeType;
+*/
+
+
+
+
         iv.setImageBitmap(bmp);
         TextView tv_comment = (TextView) view.findViewById(R.id.comment);
         tv_comment.setText(comment);

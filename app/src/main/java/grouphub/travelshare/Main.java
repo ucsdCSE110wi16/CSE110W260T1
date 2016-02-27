@@ -85,10 +85,10 @@ public class Main extends AppCompatActivity {
 
         dropdown.setAdapter(new ArrayAdapter<String>(Main.this, R.layout.spinner_layout, menu_items));
 
-        
+
         ParseUser currentUser = ParseUser.getCurrentUser();
-        Integer invitation = (Integer) currentUser.get("invitationID");
-        if (!invitation.equals(0)){
+        string invitation = (string) currentUser.get("invitationID");
+        if (!string.equals("0")){
             recieveInvitation(invitation);
         }
     }
@@ -128,7 +128,7 @@ public class Main extends AppCompatActivity {
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4);
         }
     }
-    protected void recieveInvitation(Integer groupID){
+    protected void recieveInvitation(string groupID){
 
     }
     protected void acceptInvitation(){

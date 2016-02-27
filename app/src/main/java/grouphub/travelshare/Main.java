@@ -84,12 +84,19 @@ public class Main extends AppCompatActivity {
         });
 
         dropdown.setAdapter(new ArrayAdapter<String>(Main.this, R.layout.spinner_layout, menu_items));
+
+        
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        Integer invitation = (Integer) currentUser.get("invitationID");
+        if (!invitation.equals(0)){
+            recieveInvitation(invitation);
+        }
     }
 
-    protected void checkCameraPermissions(){
+    protected void checkCameraPermissions() {
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA}, 1);
 
@@ -120,6 +127,15 @@ public class Main extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4);
         }
+    }
+    protected void recieveInvitation(Integer groupID){
+
+    }
+    protected void acceptInvitation(){
+
+    }
+    protected void rejectInvitation(){
+
     }
 
 }

@@ -67,9 +67,13 @@ public class TravelGroup extends ParseObject {
         }
     }
 
-    //TODO send a request to invite a user
+    // send a request to the user
     public void inviteUser(ParseUser user) {
-        return;
+        // get the groupID of the current user's active travel group
+        String groupID = getActiveTravelGroup(ParseUser.getCurrentUser()).getId();
+        
+        // now send the invite to the user
+        user.put("invitationID", groupID);
     }
 
     // Return unique id of the object

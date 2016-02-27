@@ -1,6 +1,5 @@
 package grouphub.travelshare;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,22 +19,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -251,12 +244,15 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     cityName = addresses.get(0).getAddressLine(0);
                 } catch(Exception e) {}
 
+                // Get the date, append milliseconds after it to have a unique photo name for upload to parse
                 Calendar c = Calendar.getInstance();
-                String date = c.get(Calendar.DATE) + "";
+                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                String formattedDate = df.format(c.getTime());
+                formattedDate += " " + c.getTimeInMillis();
 
                 // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
                 // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
-                Photo photo = new Photo(cityName,date,image, ParseUser.getCurrentUser());
+                Photo photo = new Photo(cityName,formattedDate,image, ParseUser.getCurrentUser());
                 TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
                 bitmap.recycle();
                 try {

@@ -3,25 +3,17 @@ package grouphub.travelshare;
 import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.parse.ParseUser;
@@ -87,9 +79,9 @@ public class Main extends AppCompatActivity {
 
 
         ParseUser currentUser = ParseUser.getCurrentUser();
-        string invitation = (string) currentUser.get("invitationID");
-        if (!string.equals("0")){
-            recieveInvitation(invitation);
+        String invitation = (String) currentUser.get("invitationID");
+        if (!invitation.equals("0")){
+            receiveInvitation(invitation);
         }
     }
 
@@ -128,7 +120,7 @@ public class Main extends AppCompatActivity {
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4);
         }
     }
-    protected void recieveInvitation(string groupID){
+    protected void receiveInvitation(String groupID){
 
     }
     protected void acceptInvitation(){

@@ -1,20 +1,21 @@
 package grouphub.travelshare;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 
 /**
@@ -92,7 +93,35 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
                 TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
                 Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
                 break;
+
+            case R.id.button_inviteusertogroup:
+            // get the email from text field and pass in to the function below VVVVV
+            String email = "PLACEHOLDER";
+            inviteUserToGroup(email);
         }
+
+    }
+
+    // this will call the inviteUser method in TravelGroup
+    private void inviteUserToGroup(String email) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("username", email);
+        query.findInBackground(new FindCallback<ParseUser>() {
+
+
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    // The query was successful. Set the userToInvite
+                    ParseUser userToInvite = objects.get(0);
+                    TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).inviteUser(userToInvite);
+                    Toast.makeText(getActivity(), "User invited!", Toast.LENGTH_LONG).show();
+                } else {
+                    // The user was not found.
+                    Toast.makeText(getActivity(), "Error: User not found!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
 
     }
 

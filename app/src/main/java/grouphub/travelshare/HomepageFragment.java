@@ -1,29 +1,17 @@
 package grouphub.travelshare;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
+import android.app.AlertDialog;
 import android.app.Fragment;
-import android.text.Layout;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.parse.ParseUser;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 
 public class HomepageFragment extends Fragment {
@@ -59,6 +47,13 @@ public class HomepageFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+
+        // check if the current user has any group invitations, if it does, then receive the invitation
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        String invitation = (String) currentUser.get("invitationID");
+        if (!invitation.equals("0") && !invitation.equals("")){
+            receiveInvitation(invitation);
         }
 
     }
@@ -124,4 +119,50 @@ public class HomepageFragment extends Fragment {
         //getFragmentManager().beginTransaction().add(R.id.homepage_main_view, newPic, "Hello").commit();
 
     }
+
+
+    protected void receiveInvitation(String groupID){
+
+        // get the group object based off the groupID
+        final TravelGroup group = TravelGroup.getTravelGroup(groupID);
+        String groupName = (String) group.get("groupName");
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked, accept the invitation!
+                        acceptInvitation(group);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked, reject the invitation
+                        rejectInvitation();
+                        break;
+                }
+            }
+        };
+
+        // pop up a dialog box asking the user if they want to accept/reject the invitation
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("You have received an invitation to join " + groupName + "! Accept?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    protected void acceptInvitation(TravelGroup group){
+        // add the user to the TravelGroup
+        group.addUser(ParseUser.getCurrentUser());
+
+        // set the invitations the user has to none
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.put("invitationID", "0");
+        //TODO: UPDATE HOMEPAGE GROUPNAME TITLE AND PICTURES IF USER ACCEPTED INVITE TO A NEW GROUP
+    }
+
+    protected void rejectInvitation(){
+        // set the invitations the user has to none
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.put("invitationID", "0");
+    }
+
 }

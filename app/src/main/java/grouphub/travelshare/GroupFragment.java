@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -29,6 +30,8 @@ import java.util.List;
 public class GroupFragment extends Fragment implements View.OnClickListener{
     private View view;
     private Button button_creategroup;
+    private Button button_inviteusertogroup;
+    private EditText email_textfield;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,6 +83,11 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
         button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
         button_creategroup.setOnClickListener(this);
 
+        button_inviteusertogroup = (Button) view.findViewById(R.id.button_inviteusertogroup);
+        button_inviteusertogroup.setOnClickListener(this);
+
+        email_textfield = (EditText) view.findViewById(R.id.usertoinvite);
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -94,16 +102,20 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
                 break;
 
-            case R.id.button_inviteusertogroup:
-            // get the email from text field and pass in to the function below VVVVV
-            String email = "PLACEHOLDER";
-            inviteUserToGroup(email);
+            case R.id.button_inviteusertogroup: // THIS BUTTON IS A DUMMY BUTTON
+                // get the email from text field and pass in to the function below VVVVV
+                String email = this.email_textfield.getText().toString();
+                inviteUserToGroup(email);
         }
 
     }
 
     // this will call the inviteUser method in TravelGroup
     private void inviteUserToGroup(String email) {
+        if (TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null) {
+            Toast.makeText(getActivity(), "Error: You must create a group first!", Toast.LENGTH_LONG).show();
+            return;
+        }
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", email);
         query.findInBackground(new FindCallback<ParseUser>() {

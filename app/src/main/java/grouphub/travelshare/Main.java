@@ -30,6 +30,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         // Initialize homepage and toolbar fragments
 
         Fragment fragmentH= new HomepageFragment();
@@ -76,13 +77,6 @@ public class Main extends AppCompatActivity {
         });
 
         dropdown.setAdapter(new ArrayAdapter<String>(Main.this, R.layout.spinner_layout, menu_items));
-
-
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        String invitation = (String) currentUser.get("invitationID");
-        if (!invitation.equals("0")){
-            receiveInvitation(invitation);
-        }
     }
 
     protected void checkCameraPermissions() {
@@ -119,15 +113,6 @@ public class Main extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4);
         }
-    }
-    protected void receiveInvitation(String groupID){
-
-    }
-    protected void acceptInvitation(){
-
-    }
-    protected void rejectInvitation(){
-
     }
 
 }

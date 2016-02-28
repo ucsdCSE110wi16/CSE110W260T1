@@ -39,7 +39,7 @@ public class Photo extends ParseObject {
         super();
 
         Calendar c = Calendar.getInstance();
-        String unique = c.get(Calendar.DATE) + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.MILLISECOND) + "";
+        String unique = c.get(Calendar.DATE) + "" + c.get(Calendar.HOUR_OF_DAY) + "" + c.get(Calendar.MINUTE) + "" + c.get(Calendar.MILLISECOND) + "";
 
         ArrayList<ParseObject> comments = new ArrayList<ParseObject>();
         ParseFile pic = new ParseFile(creater.get("screenName") + unique + ".jpg", data);
@@ -209,6 +209,18 @@ public class Photo extends ParseObject {
         try {
             ParseFile pic = fetchIfNeeded().getParseFile("pic");
             return pic.getData();
+        }
+        catch (ParseException e) {
+            Log.d(TAG, "Error in getting photo from Parse: " + e);
+            return null;
+        }
+    }
+
+    // Get the url of the image for use with Picasso
+    public String getPhotoUrl() {
+        try {
+            ParseFile pic = fetchIfNeeded().getParseFile("pic");
+            return pic.getUrl();
         }
         catch (ParseException e) {
             Log.d(TAG, "Error in getting photo from Parse: " + e);

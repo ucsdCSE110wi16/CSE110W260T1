@@ -14,25 +14,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_manager"
-            android:background="@drawable/custom_manager" />
+            android:background="@drawable/custom_manager"
+            android:layout_weight="1"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_camera"
-            android:background="@drawable/custom_camera" />
+            android:background="@drawable/custom_camera"
+            android:layout_weight="1"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_folders"
-            android:background="@drawable/custom_folders" />
+            android:background="@drawable/custom_folders"
+            android:layout_weight="1"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_views"
-            android:background="@drawable/custom_views" />
+            android:background="@drawable/custom_views"
+            android:layout_weight="10"/>
 
     </LinearLayout>
 

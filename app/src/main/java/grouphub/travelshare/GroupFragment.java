@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -17,52 +18,24 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.Serializable;
 import java.util.List;
 
+public class GroupFragment extends Fragment implements Serializable{
+    private transient View view;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link GroupFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link GroupFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class GroupFragment extends Fragment implements View.OnClickListener{
-    private View view;
-    private Button button_creategroup;
-    private Button button_inviteusertogroup;
-    private EditText email_textfield;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private transient Button button_creategroup;
+    private transient Button button_inviteusertogroup;
+    private transient EditText email_textfield;
 
     public GroupFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment GroupFragment.
-     */
     // TODO: Rename and change types and number of parameters
-    public static GroupFragment newInstance(String param1, String param2) {
+    public static GroupFragment newInstance() {
         GroupFragment fragment = new GroupFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,8 +44,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
     @Override
@@ -81,33 +52,29 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
 
         view = inflater.inflate(R.layout.fragment_group, container, false);
 
+        email_textfield = (EditText) view.findViewById(R.id.usertoinvite);
+
         button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
-        button_creategroup.setOnClickListener(this);
+        button_creategroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
+                Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
+            }
+        });
 
         button_inviteusertogroup = (Button) view.findViewById(R.id.button_inviteusertogroup);
-        button_inviteusertogroup.setOnClickListener(this);
-
-        email_textfield = (EditText) view.findViewById(R.id.usertoinvite);
+        button_inviteusertogroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get the email from text field and pass in to the function below VVVVV
+                String email = email_textfield.getText().toString();
+                inviteUserToGroup(email);
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
-    }
-
-    @Override
-    public void onClick(View view) {
-        // For the functionality of the buttons
-        switch (view.getId()) {
-            case R.id.button_creategroup:
-
-                TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
-                Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
-                break;
-
-            case R.id.button_inviteusertogroup: // THIS BUTTON IS A DUMMY BUTTON
-                // get the email from text field and pass in to the function below VVVVV
-                String email = this.email_textfield.getText().toString();
-                inviteUserToGroup(email);
-        }
 
     }
 
@@ -144,37 +111,4 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    @Override
-
-
-        public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            //throw new RuntimeException(context.toString()
-            //        + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

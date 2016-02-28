@@ -219,12 +219,16 @@ public class TravelGroup extends ParseObject {
 
         ArrayList<TravelGroup> groups = (ArrayList<TravelGroup>) user.get("groups");
 
-        if(groups == null || groups.size() == 0) {
+        TravelGroup gr = null;
 
-            return null;
+        try {
+            if (groups.size() == 0) {
+                return null;
+            }
+            gr = groups.get(groups.size() - 1);
+        } catch(Exception e) {
+            Log.d(TAG, "Problem accessing group");
         }
-
-        TravelGroup gr = groups.get(groups.size() - 1);
 
         return gr;
         //return groups.get(groups.size() - 1);

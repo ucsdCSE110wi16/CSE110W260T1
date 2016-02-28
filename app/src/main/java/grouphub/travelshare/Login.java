@@ -65,30 +65,34 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                                     public void done(List<ParseUser> objects, ParseException e) {
                                         if (e == null) {
-                                            // The query was successful. Don't sign the user up, just log them in.
-                                            login(true, email);
-                                        } else {
-                                            // The user was not found. Go ahead and sign them up
-                                            // sign the facebook user up via parse
-                                            ParseUser user = new ParseUser();
-                                            user.setEmail(email);
-                                            user.setPassword("F");
-                                            user.setUsername(email);
+                                            if (objects.size() != 0) {
+                                                // The query was successful. Don't sign the user up, just log them in.
+                                                login(true, email);
+                                            } else {
+                                                // The user was not found. Go ahead and sign them up
+                                                // sign the facebook user up via parse
+                                                ParseUser user = new ParseUser();
+                                                user.setEmail(email);
+                                                user.setPassword("F");
+                                                user.setUsername(email);
 
-                                            user.put("screenName", name);
-                                            user.put("invitationID", Integer.toString(0));
+                                                user.put("screenName", name);
+                                                user.put("invitationID", Integer.toString(0));
 
-                                            user.signUpInBackground(new SignUpCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    if (e == null) {
-                                                        successfulLogin();
-                                                    } else {
-                                                        Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                                user.signUpInBackground(new SignUpCallback() {
+                                                    @Override
+                                                    public void done(ParseException e) {
+                                                        if (e == null) {
+                                                            successfulLogin();
+                                                        } else {
+                                                            Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                                        }
                                                     }
-                                                }
-                                            });
-
+                                                });
+                                            }
+                                        } else {
+                                            // parse error...
+                                            Toast.makeText(Login.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                                         }
                                     }
 

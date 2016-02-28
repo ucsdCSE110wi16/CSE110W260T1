@@ -38,7 +38,7 @@ public class LoginTest {
             e.printStackTrace();
         }
 
-        //onView(withId(R.id.homepage_main_view)).check(matches(withId(R.id.homepage_main_view)));
+        onView(withId(R.id.listview_pictures)).check(matches(withId(R.id.listview_pictures)));
 
     }
 

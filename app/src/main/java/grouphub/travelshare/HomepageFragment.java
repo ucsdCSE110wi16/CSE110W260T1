@@ -89,6 +89,15 @@ public class HomepageFragment extends Fragment implements Serializable{
 
     }
 
+    private void clearPictures() {
+        viewModels.clear();
+    }
+
+    public void reinitializePictures() {
+        clearPictures();
+        initializePictures();
+    }
+
     // for adding many pictures
     private void addPicturesToView(ArrayList<Photo> photos) {
         for (int i = photos.size() - 1; i >= 0; i--) {
@@ -101,11 +110,10 @@ public class HomepageFragment extends Fragment implements Serializable{
         mainView.setAdapter(adapter);
     }
 
-    // for adding a single picture
-    public void addPictureToView(Photo photo) {
-        PictureViewModel row = new PictureViewModel(photo.getCityName() + "\n" + photo.getDate(),
-                photo.getPhotoUrl());
-        viewModels.add(row);
+    // for adding a single picture. However, reloads everything!
+    public void addPictureToView(String cityName, String date, String path) {
+        PictureViewModel row = new PictureViewModel(cityName + "\n" + date, path);
+        viewModels.add(0, row);
 
         PictureListViewAdapter adapter = new PictureListViewAdapter(getActivity(), viewModels);
         mainView.setAdapter(adapter);

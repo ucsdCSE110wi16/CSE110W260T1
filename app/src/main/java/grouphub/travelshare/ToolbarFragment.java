@@ -35,12 +35,16 @@ import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
+    private final int IMAGE_MAX_SIZE = 1080;
     private View view;
     private HomepageFragment fragmentHomepage;
     private GroupFragment fragmentGroup;
@@ -229,6 +233,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
 
         startActivityForResult(imageIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
     // used to process the saved image from the camera
@@ -254,38 +259,42 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 }
 
                 // Image captured and saved to fileUri specified in the Intent
-                Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); // 0 for small size, 100 for quality
-
-                byte[] image = stream.toByteArray();
-
-                List<Address> addresses = null;
-                String cityName = "";
-                Geocoder geocoder;
+                //Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
                 try {
-                    geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                    addresses = geocoder.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 1);
-                    cityName = addresses.get(0).getAddressLine(0);
-                } catch(Exception e) {
-                    Toast.makeText(getActivity(), "Could not retrieve location", Toast.LENGTH_LONG).show();
-                }
+                    Bitmap bitmap = decodeFile(uriSavedImage.toString().substring(7));
 
-                // Get the date, append milliseconds after it to have a unique photo name for upload to parse
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                String formattedDate = df.format(c.getTime());
-                formattedDate += " " + c.getTimeInMillis();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); // 0 for small size, 100 for quality
+                    bitmap.recycle(); // to avoid memory leaks
 
-                // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
-                // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
-                Photo photo = new Photo(cityName,formattedDate,image, ParseUser.getCurrentUser());
-                TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
-                bitmap.recycle();
+                    byte[] image = stream.toByteArray();
 
-                try {
+                    List<Address> addresses = null;
+                    String cityName = "";
+                    Geocoder geocoder;
+                    try {
+                        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                        addresses = geocoder.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 1);
+                        cityName = addresses.get(0).getAddressLine(0);
+                    } catch(Exception e) {
+                        Toast.makeText(getActivity(), "Could not retrieve location", Toast.LENGTH_LONG).show();
+                    }
+
+                    // Get the date, append milliseconds after it to have a unique photo name for upload to parse
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
+                    String formattedDate = df.format(c.getTime());
+
+                    // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
+                    // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
+                    Photo photo = new Photo(cityName,formattedDate,image, ParseUser.getCurrentUser());
+                    TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
+
                     stream.close();
-                } catch(Exception e) {}
+
+                }catch(Exception e) {
+                    Log.d("bitmap", "Failed to process image");
+                }
 
             } else if (resultCode == 0) {
 
@@ -348,6 +357,34 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    private Bitmap decodeFile(String imagePath) throws IOException{ // need to deal with exceptions still
+        Bitmap b = null;
+
+        //Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+
+        File f = new File(imagePath);
+        FileInputStream fis = new FileInputStream(f);
+        BitmapFactory.decodeStream(fis, null, o);
+        fis.close();
+
+        int scale = 1;
+        if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+            scale = (int)Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
+                    (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+        }
+
+        //Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        fis = new FileInputStream(f);
+        b = BitmapFactory.decodeStream(fis, null, o2);
+        fis.close();
+
+        return b;
     }
 
 }

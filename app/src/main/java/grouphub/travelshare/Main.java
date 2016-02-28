@@ -40,8 +40,10 @@ public class Main extends AppCompatActivity {
 
         // Initialize homepage and toolbar fragments
 
-        Fragment fragmentH= new HomepageFragment();
-        Fragment fragmentT = new ToolbarFragment();
+        HomepageFragment fragmentH = HomepageFragment.newInstance();
+        GroupFragment fragmentG = GroupFragment.newInstance();
+        FoldersFragment fragmentF = FoldersFragment.newInstance();
+        ToolbarFragment fragmentT = ToolbarFragment.newInstance(fragmentH, fragmentG, fragmentF);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.fragment_toolbar, fragmentT);
         fragmentTransaction.add(R.id.placeholder, fragmentH);

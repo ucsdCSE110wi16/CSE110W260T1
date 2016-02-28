@@ -28,6 +28,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -37,12 +39,21 @@ import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
-    View view;
+    private View view;
+    private HomepageFragment fragmentHomepage;
+    private GroupFragment fragmentGroup;
+    private FoldersFragment fragmentFolders;
+
+    // For use with bundles
+    private static final String HOMEPAGE_KEY = "homepage_key";
+    private static final String GROUP_KEY = "group_key";
+    private static final String FOLDERS_KEY = "folders_key";
 
     // Declare toolbar buttons
     private Button buttonFolders;
@@ -78,11 +89,9 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
     public ToolbarFragment() {
         // Required empty public constructor
-        homepageFragment = new HomepageFragment();
-        folderFragment = new FoldersFragment();
-        groupFragment = new GroupFragment();
 
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -93,11 +102,12 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
      * @return A new instance of fragment ToolbarFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ToolbarFragment newInstance(String param1, String param2) {
+    public static ToolbarFragment newInstance(HomepageFragment param1, GroupFragment param2, FoldersFragment param3) {
         ToolbarFragment fragment = new ToolbarFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(HOMEPAGE_KEY, param1);
+        args.putSerializable(GROUP_KEY, param2);
+        args.putSerializable(FOLDERS_KEY, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,6 +126,13 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_toolbar, container, false);
+
+        fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
+                HOMEPAGE_KEY);
+        fragmentGroup = (GroupFragment) getArguments().getSerializable(
+                GROUP_KEY);
+        fragmentFolders = (FoldersFragment) getArguments().getSerializable(
+                FOLDERS_KEY);
 
         buttonFolders = (Button) view.findViewById(R.id.button_folders);
         buttonCamera = (Button) view.findViewById(R.id.button_camera);
@@ -140,28 +157,32 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.button_folders:
                 if (buttonFoldersPressed) {
-                    trans.replace(R.id.placeholder, homepageFragment);
+                    trans.replace(R.id.placeholder, fragmentHomepage);
                     trans.addToBackStack(null);
                     trans.commit();
                     resetButtonPress();
                 } else {
-                    trans.replace(R.id.placeholder, folderFragment);
+                    trans.replace(R.id.placeholder, fragmentFolders);
                     trans.addToBackStack(null);
                     trans.commit();
+                    resetButtonPress();
                     buttonFoldersPressed = true;
                 }
                 break;
             case R.id.button_camera:
-                useCamera();
+                if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) != null)
+                    useCamera();
+                else
+                    Toast.makeText(getActivity(), "Cannot use camera because\nyou are not in a group", Toast.LENGTH_LONG).show();
                 break;
             case R.id.button_manager:
                 if (buttonManagerPressed) {
-                    trans.replace(R.id.placeholder, homepageFragment);
+                    trans.replace(R.id.placeholder, fragmentHomepage);
                     trans.addToBackStack(null);
                     trans.commit();
                     resetButtonPress();
                 } else {
-                    trans.replace(R.id.placeholder, groupFragment);
+                    trans.replace(R.id.placeholder, fragmentGroup);
                     trans.addToBackStack(null);
                     trans.commit();
                     resetButtonPress();
@@ -174,7 +195,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    // Resets button presses (and for now button colors)
+    // Resets button presses
     public void resetButtonPress() {
         buttonManagerPressed = false;
         buttonFoldersPressed = false;
@@ -205,6 +226,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File imagesFolder = new File(Environment.getExternalStorageDirectory(), "TravelShareTemp");
         imagesFolder.mkdirs();
+
+        // Don't need to save in temp folder anymore?
         File image = new File(imagesFolder, "tempImage.jpg");
         uriSavedImage = Uri.fromFile(image);
         imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
@@ -241,24 +264,28 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
                 byte[] image = stream.toByteArray();
 
-
                 List<Address> addresses = null;
-                String cityName = "";
+                String cityName = "NoCityName";
                 Geocoder geocoder;
                 try {
                     geocoder = new Geocoder(getActivity(), Locale.getDefault());
                     addresses = geocoder.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 1);
                     cityName = addresses.get(0).getAddressLine(0);
-                } catch(Exception e) {}
+                } catch(Exception e) {
+                    Toast.makeText(getActivity(), "Could not retrieve location", Toast.LENGTH_LONG).show();
+                }
 
-                Calendar c = Calendar.getInstance();
-                String date = c.get(Calendar.DATE) + "";
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                dateFormat.setCalendar(cal);
+                String date = dateFormat.format(cal.getTime());
 
                 // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
                 // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
-                Photo photo = new Photo(cityName,date,image, ParseUser.getCurrentUser());
+                Photo photo = new Photo(cityName, date, image, ParseUser.getCurrentUser());
                 TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
                 bitmap.recycle();
+
                 try {
                     stream.close();
                 } catch(Exception e) {}
@@ -316,7 +343,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     {
 
         String permission = "android.permission.ACCESS_FINE_LOCATION";
-        int res = getContext().checkCallingPermission(permission);
+        int res = getActivity().checkCallingPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
 
         //todo Handle case where permission isn't granted, popup to user or something

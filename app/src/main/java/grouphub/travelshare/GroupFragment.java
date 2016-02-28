@@ -1,28 +1,31 @@
 package grouphub.travelshare;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class GroupFragment extends Fragment implements Serializable{
     private transient View view;
 
-    private OnFragmentInteractionListener mListener;
+    private transient Button button_creategroup;
+    private transient Button button_inviteusertogroup;
+    private transient EditText email_textfield;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -48,49 +51,57 @@ public class GroupFragment extends Fragment implements Serializable{
 
         view = inflater.inflate(R.layout.fragment_group, container, false);
 
-        Button button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
+        email_textfield = (EditText) view.findViewById(R.id.usertoinvite);
+
+        button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
         button_creategroup.setOnClickListener(new View.OnClickListener() {
-                                                  public void onClick(View view) {
-                                                      TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
-                                                      Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
-                                                  }
-                                              }
-        );
+            @Override
+            public void onClick(View v) {
+                TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
+                Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        button_inviteusertogroup = (Button) view.findViewById(R.id.button_inviteusertogroup);
+        button_inviteusertogroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get the email from text field and pass in to the function below VVVVV
+                String email = email_textfield.getText().toString();
+                inviteUserToGroup(email);
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
+
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            //throw new RuntimeException(context.toString()
-            //        + " must implement OnFragmentInteractionListener");
+    // this will call the inviteUser method in TravelGroup
+    private void inviteUserToGroup(String email) {
+        if (TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null) {
+            Toast.makeText(getActivity(), "Error: You must create a group first!", Toast.LENGTH_LONG).show();
+            return;
         }
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("username", email);
+        query.findInBackground(new FindCallback<ParseUser>() {
+
+
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    // The query was successful. Set the userToInvite
+                    ParseUser userToInvite = objects.get(0);
+                    TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).inviteUser(userToInvite);
+                    Toast.makeText(getActivity(), "User invited!", Toast.LENGTH_LONG).show();
+                } else {
+                    // The user was not found.
+                    Toast.makeText(getActivity(), "Error: User not found!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

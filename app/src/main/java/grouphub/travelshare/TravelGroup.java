@@ -67,9 +67,21 @@ public class TravelGroup extends ParseObject {
         }
     }
 
-    //TODO send a request to invite a user
+    // send a request to the user
     public void inviteUser(ParseUser user) {
-        return;
+        String invitedUsersGroup = "";
+        if (getActiveTravelGroup(user) != null) {
+            invitedUsersGroup = getActiveTravelGroup(user).getId();
+        }
+
+        // get the groupID of the current user's active travel group
+        String groupID = getActiveTravelGroup(ParseUser.getCurrentUser()).getId();
+
+        if (invitedUsersGroup.equals(groupID)) {
+            return;
+        }
+        // now send the invite to the user
+        user.put("invitationID", groupID);
     }
 
     // Return unique id of the object
@@ -204,7 +216,6 @@ public class TravelGroup extends ParseObject {
 
 
     public static TravelGroup getActiveTravelGroup(ParseUser user) {
-        //TODO: create method to return active Travel Group of user
 
         ArrayList<TravelGroup> groups = (ArrayList<TravelGroup>) user.get("groups");
 

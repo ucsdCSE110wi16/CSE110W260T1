@@ -1,6 +1,5 @@
 package grouphub.travelshare;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,13 +19,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import android.widget.Toast;
 
 import com.parse.ParseClassName;
@@ -35,7 +32,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -265,7 +261,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 byte[] image = stream.toByteArray();
 
                 List<Address> addresses = null;
-                String cityName = "NoCityName";
+                String cityName = "";
                 Geocoder geocoder;
                 try {
                     geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -275,14 +271,15 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Could not retrieve location", Toast.LENGTH_LONG).show();
                 }
 
-                Calendar cal = Calendar.getInstance();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                dateFormat.setCalendar(cal);
-                String date = dateFormat.format(cal.getTime());
+                // Get the date, append milliseconds after it to have a unique photo name for upload to parse
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                String formattedDate = df.format(c.getTime());
+                formattedDate += " " + c.getTimeInMillis();
 
                 // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
                 // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
-                Photo photo = new Photo(cityName, date, image, ParseUser.getCurrentUser());
+                Photo photo = new Photo(cityName,formattedDate,image, ParseUser.getCurrentUser());
                 TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
                 bitmap.recycle();
 

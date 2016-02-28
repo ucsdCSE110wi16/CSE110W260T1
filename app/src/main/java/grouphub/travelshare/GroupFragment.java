@@ -123,13 +123,19 @@ public class GroupFragment extends Fragment implements View.OnClickListener{
 
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
-                    // The query was successful. Set the userToInvite
-                    ParseUser userToInvite = objects.get(0);
-                    TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).inviteUser(userToInvite);
-                    Toast.makeText(getActivity(), "User invited!", Toast.LENGTH_LONG).show();
+
+                    if (objects.size() != 0) {
+                        // The query was successful. Set the userToInvite
+                        ParseUser userToInvite = objects.get(0);
+                        TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).inviteUser(userToInvite);
+                        Toast.makeText(getActivity(), "User invited!", Toast.LENGTH_LONG).show();
+                    } else {
+                        // The user was not found.
+                        Toast.makeText(getActivity(), "Error: User not found!", Toast.LENGTH_LONG).show();
+                    }
+
                 } else {
-                    // The user was not found.
-                    Toast.makeText(getActivity(), "Error: User not found!", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "ParseQueryError: "+e);
                 }
             }
 

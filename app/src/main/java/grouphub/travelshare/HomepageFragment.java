@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.ParseUser;
 
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class HomepageFragment extends Fragment implements Serializable{
     private transient View view;
+    private transient TextView textViewGroupName;
     private transient ListView mainViewList;
     private transient GridView mainViewGrid;
     private transient List<PictureViewModel> viewModels; // to keep track of photos on homepage for listview
@@ -65,6 +67,9 @@ public class HomepageFragment extends Fragment implements Serializable{
 
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_homepage, container, false);
+
+            textViewGroupName = (TextView) view.findViewById(R.id.group_name_text);
+            resetGroupName(); // on top bar
 
             mainViewList = (ListView) view.findViewById(R.id.listview_pictures);
             mainViewGrid = (GridView) view.findViewById(R.id.gridview_pictures);
@@ -151,6 +156,14 @@ public class HomepageFragment extends Fragment implements Serializable{
         initializePictures();
     }
 
+    public void resetGroupName(){
+        TravelGroup gr = TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser());
+        if( gr != null )
+            textViewGroupName.setText(gr.getGroupName());
+        else
+            textViewGroupName.setText("No Group");
+    }
+
     // for adding many pictures
     private void addPicturesToView(ArrayList<Photo> photos) {
         for (int i = photos.size() - 1; i >= 0; i--) {
@@ -217,7 +230,10 @@ public class HomepageFragment extends Fragment implements Serializable{
         // set the invitations the user has to none
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.put("invitationID", "0");
-        //TODO: UPDATE HOMEPAGE GROUPNAME TITLE AND PICTURES IF USER ACCEPTED INVITE TO A NEW GROUP
+
+        //UPDATE HOMEPAGE GROUPNAME TITLE AND PICTURES IF USER ACCEPTED INVITE TO A NEW GROUP
+        reinitializePictures();
+        resetGroupName();
     }
 
     protected void rejectInvitation(){

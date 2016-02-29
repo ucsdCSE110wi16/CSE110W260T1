@@ -24,6 +24,7 @@ import java.util.List;
 public class GroupFragment extends Fragment implements Serializable {
     private transient View view;
 
+    private transient HomepageFragment fragmentHomepage; // need the reference for page reset upon group creation
     private transient Button button_creategroup;
     private transient Button button_inviteusertogroup;
     private popupModes popupMode;
@@ -35,14 +36,17 @@ public class GroupFragment extends Fragment implements Serializable {
     private final int REQCODE = 0;
     private final String EDIT_TEXT_BUNDLE_KEY = "new data";
 
+    private static final String HOMEPAGE_KEY = "homepage_key";
+
     public GroupFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static GroupFragment newInstance() {
+    public static GroupFragment newInstance(HomepageFragment param1) {
         GroupFragment fragment = new GroupFragment();
         Bundle args = new Bundle();
+        args.putSerializable(HOMEPAGE_KEY, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,6 +62,9 @@ public class GroupFragment extends Fragment implements Serializable {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_group, container, false);
+
+        fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
+                HOMEPAGE_KEY);
 
         button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
         button_creategroup.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +106,10 @@ public class GroupFragment extends Fragment implements Serializable {
                     // upon closing popup window, create group
                     TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), editTextString);
                     Toast.makeText(getActivity(), "Group Created:\n" + editTextString, Toast.LENGTH_LONG).show();
+
+                    // reset page upon entering a new group
+                    fragmentHomepage.resetGroupName();
+                    fragmentHomepage.reinitializePictures();
                     break;
                 case INVITE:
                     inviteUserToGroup(editTextString);

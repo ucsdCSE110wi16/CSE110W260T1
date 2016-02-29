@@ -34,7 +34,7 @@ public class Main extends AppCompatActivity {
         // Initialize homepage and toolbar fragments
 
         HomepageFragment fragmentH = HomepageFragment.newInstance();
-        GroupFragment fragmentG = GroupFragment.newInstance();
+        GroupFragment fragmentG = GroupFragment.newInstance(fragmentH);
         FoldersFragment fragmentF = FoldersFragment.newInstance();
         ToolbarFragment fragmentT = ToolbarFragment.newInstance(fragmentH, fragmentG, fragmentF);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

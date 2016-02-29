@@ -12,8 +12,7 @@ import com.squareup.picasso.Picasso;
 
 public class PictureRow {
 
-    // This is a reference to the layout we defined above
-    public static final int LAYOUT = R.layout.fragment_picture;
+    public static final int LAYOUT = R.layout.picture_listview;
 
     private final Context context;
     private final TextView textView;
@@ -25,11 +24,11 @@ public class PictureRow {
         this.textView = (TextView) convertView.findViewById(R.id.where_when);
     }
 
-    public void bind(PictureViewModel exampleViewModel) {
-        this.textView.setText(exampleViewModel.getText());
+    public void bind(PictureViewModel viewModel) {
+        this.textView.setText(viewModel.getText());
         Picasso
             .with(this.context)
-                .load(exampleViewModel.getImageUrl())
+                .load(viewModel.getImageUrl())
                 .fit()
                 .into(this.imageView);
     }

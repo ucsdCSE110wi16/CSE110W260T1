@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.parse.ParseUser;
@@ -19,8 +21,10 @@ import java.util.List;
 
 public class HomepageFragment extends Fragment implements Serializable{
     private transient View view;
-    private transient ListView mainView;
-    private transient List<PictureViewModel> viewModels; // to keep track of photos on homepage
+    private transient ListView mainViewList;
+    private transient GridView mainViewGrid;
+    private transient List<PictureViewModel> viewModels; // to keep track of photos on homepage for listview
+    private transient List<String> photoURLs; // to keep track of photos on homepage for gridview
     private transient SwipeRefreshLayout swipelayout; // for swipe to refresh
 
     private static final String TAG = "HomepageFragment";
@@ -62,11 +66,15 @@ public class HomepageFragment extends Fragment implements Serializable{
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-            mainView = (ListView) view.findViewById(R.id.listview_pictures);
+            mainViewList = (ListView) view.findViewById(R.id.listview_pictures);
+            mainViewGrid = (GridView) view.findViewById(R.id.gridview_pictures);
 
             viewModels = new ArrayList<PictureViewModel>();
+            photoURLs = new ArrayList<String>();
 
             initializePictures();
+
+            mainViewGrid.setVisibility(view.INVISIBLE); // hide the grid view and shows listview by default
 
             swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
             swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -74,6 +82,39 @@ public class HomepageFragment extends Fragment implements Serializable{
                 public void onRefresh() {
                     reinitializePictures();
                     swipelayout.setRefreshing(false);
+                }
+            });
+
+            // next bit of code with setonscrolllistener is a bit of a workaround for having multiple
+            // list/grid views inside a swiperefreshlayout
+            // allows scrolling up without forced refreshing
+            mainViewList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int topRowVerticalPosition =
+                            (mainViewList == null || mainViewList.getChildCount() == 0) ?
+                                    0 : mainViewList.getChildAt(0).getTop();
+                    swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+                }
+            });
+
+            mainViewGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int topRowVerticalPosition =
+                            (mainViewGrid == null || mainViewGrid.getChildCount() == 0) ?
+                                    0 : mainViewGrid.getChildAt(0).getTop();
+                    swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
                 }
             });
         }
@@ -102,6 +143,7 @@ public class HomepageFragment extends Fragment implements Serializable{
 
     private void clearPictures() {
         viewModels.clear();
+        photoURLs.clear();
     }
 
     public void reinitializePictures() {
@@ -112,25 +154,33 @@ public class HomepageFragment extends Fragment implements Serializable{
     // for adding many pictures
     private void addPicturesToView(ArrayList<Photo> photos) {
         for (int i = photos.size() - 1; i >= 0; i--) {
-            PictureViewModel row = new PictureViewModel(photos.get(i).getCityName() + "\n" + photos.get(i).getDate(),
-                                                        photos.get(i).getPhotoUrl());
+            String url = photos.get(i).getPhotoUrl();
+
+            // for listview
+            PictureViewModel row = new PictureViewModel(photos.get(i).getCityName() + "\n" + photos.get(i).getDate(), url);
             viewModels.add(row);
+
+            // for gridview
+            photoURLs.add(url);
         }
 
-        PictureListViewAdapter adapter = new PictureListViewAdapter(getActivity(), viewModels);
-        mainView.setAdapter(adapter);
+        PictureListViewAdapter listAdapter = new PictureListViewAdapter(getActivity(), viewModels);
+        mainViewList.setAdapter(listAdapter);
+
+        PictureGridViewAdapter gridAdapter = new PictureGridViewAdapter(getActivity(), photoURLs);
+        mainViewGrid.setAdapter(gridAdapter);
     }
 
-    // for adding a single picture. However, reloads everything!
-    public void addPictureToView(String cityName, String date, String path) {
-        PictureViewModel row = new PictureViewModel(cityName + "\n" + date, path);
-        viewModels.add(0, row);
-
-        PictureListViewAdapter adapter = new PictureListViewAdapter(getActivity(), viewModels);
-        mainView.setAdapter(adapter);
+    // To switch between gridview and listview
+    public void switchView() {
+        if(mainViewGrid.getVisibility() == view.GONE) {
+            mainViewGrid.setVisibility(view.VISIBLE);
+            mainViewList.setVisibility(view.GONE);
+        } else {
+            mainViewGrid.setVisibility(view.GONE);
+            mainViewList.setVisibility(view.VISIBLE);
+        }
     }
-
-
 
     protected void receiveInvitation(String groupID){
 

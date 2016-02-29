@@ -190,6 +190,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.button_views:
+                fragmentHomepage.switchView();
                 break;
         }
 

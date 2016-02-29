@@ -20,12 +20,4 @@
         android:layout_gravity="left|center_vertical"
         android:text="Invite"/>
 
-    <EditText
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/usertoinvite"
-        android:hint="User's Email"
-        android:layout_above="@+id/linearLayout"
-        android:layout_gravity="center" />
-
 </FrameLayout>

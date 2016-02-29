@@ -1,8 +1,9 @@
 package grouphub.travelshare;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.Context;
-import android.net.Uri;
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -21,12 +21,19 @@ import com.parse.ParseUser;
 import java.io.Serializable;
 import java.util.List;
 
-public class GroupFragment extends Fragment implements Serializable{
+public class GroupFragment extends Fragment implements Serializable {
     private transient View view;
 
     private transient Button button_creategroup;
     private transient Button button_inviteusertogroup;
-    private transient EditText email_textfield;
+    private popupModes popupMode;
+
+    private enum popupModes {
+        NEW_GROUP, INVITE
+    }
+
+    private final int REQCODE = 0;
+    private final String EDIT_TEXT_BUNDLE_KEY = "new data";
 
     public GroupFragment() {
         // Required empty public constructor
@@ -52,14 +59,15 @@ public class GroupFragment extends Fragment implements Serializable{
 
         view = inflater.inflate(R.layout.fragment_group, container, false);
 
-        email_textfield = (EditText) view.findViewById(R.id.usertoinvite);
-
         button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
         button_creategroup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), "Dummy Group");
-                Toast.makeText(getActivity(), "Group Created", Toast.LENGTH_LONG).show();
+            public void onClick(View v) { // displays a popup window to create group
+                FragmentManager fm = getFragmentManager();
+                PopupDialog editNameDialog = new PopupDialog("Create New Group", R.layout.popup_groupprompt);
+                editNameDialog.setTargetFragment(GroupFragment.this, REQCODE);
+                editNameDialog.show(fm, "popup_groupprompt");
+                popupMode = popupModes.NEW_GROUP;
             }
         });
 
@@ -67,15 +75,37 @@ public class GroupFragment extends Fragment implements Serializable{
         button_inviteusertogroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get the email from text field and pass in to the function below VVVVV
-                String email = email_textfield.getText().toString();
-                inviteUserToGroup(email);
+                FragmentManager fm = getFragmentManager();
+                PopupDialog editNameDialog = new PopupDialog("Invite New Member", R.layout.popup_invite);
+                editNameDialog.setTargetFragment(GroupFragment.this, REQCODE);
+                editNameDialog.show(fm, "popup_invite");
+                popupMode = popupModes.INVITE;
             }
         });
 
         // Inflate the layout for this fragment
         return view;
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Make sure fragment codes match up
+        if (requestCode == PopupDialog.getRequestCode()) {
+            String editTextString = data.getStringExtra(
+                    PopupDialog.getKey());
+
+            switch(popupMode){
+                case NEW_GROUP:
+                    // upon closing popup window, create group
+                    TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), editTextString);
+                    Toast.makeText(getActivity(), "Group Created:\n" + editTextString, Toast.LENGTH_LONG).show();
+                    break;
+                case INVITE:
+                    inviteUserToGroup(editTextString);
+                    Toast.makeText(getActivity(), editTextString + "\nwas invited", Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
     }
 
     // this will call the inviteUser method in TravelGroup

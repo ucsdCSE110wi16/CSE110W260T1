@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class HomepageFragment extends Fragment implements Serializable{
     private transient View view;
     private transient ListView mainView;
     private transient List<PictureViewModel> viewModels; // to keep track of photos on homepage
+    private transient SwipeRefreshLayout swipelayout; // for swipe to refresh
 
     private static final String TAG = "HomepageFragment";
 
@@ -65,6 +67,15 @@ public class HomepageFragment extends Fragment implements Serializable{
             viewModels = new ArrayList<PictureViewModel>();
 
             initializePictures();
+
+            swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+            swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    reinitializePictures();
+                    swipelayout.setRefreshing(false);
+                }
+            });
         }
 
         return view;

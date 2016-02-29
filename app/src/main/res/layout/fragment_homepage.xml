@@ -5,32 +5,46 @@
     android:layout_height="match_parent"
     tools:context="grouphub.travelshare.HomepageFragment">
 
-    <RelativeLayout
-        android:id="@+id/group_name_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/group_name_bar"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/group_name_bar_margins_left"
-        android:layout_marginRight="@dimen/group_name_bar_margins_right">
-
-        <TextView
-            android:id="@+id/group_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Maldives! :D"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/listview_pictures"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/group_name_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/group_name_bar"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/group_name_bar_margins_left"
+            android:layout_marginRight="@dimen/group_name_bar_margins_right">
+
+            <TextView
+                android:id="@+id/group_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maldives! :D"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/swipe_container">
+
+            <ListView
+                android:id="@+id/listview_pictures"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

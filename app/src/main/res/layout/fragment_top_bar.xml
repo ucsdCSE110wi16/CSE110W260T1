@@ -7,8 +7,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/topbar_height"
-        android:background="@drawable/top_most_bar"
+        android:background="@drawable/top_bar"
         android:layout_gravity="center_horizontal|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TripPhoto"
+            android:textColor="@color/colorPrimary"
+            android:typeface="serif"
+            android:textSize="30sp"
+            android:layout_marginLeft="10dp"
+            />
 
         <!-- Why prompt??? -->
         <!-- overlap anchor for api >= 21-->

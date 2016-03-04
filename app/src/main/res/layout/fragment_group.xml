@@ -9,15 +9,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_creategroup"
-        android:background="@drawable/custom_button"
+        android:background="@drawable/group_name_bar"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:text="Create Group"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_inviteusertogroup"
-        android:background = "@drawable/custom_button"
-        android:layout_gravity="left|center_vertical"
+        android:background = "@drawable/group_name_bar"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_margin="20dp"
         android:text="Invite"/>
 
 </FrameLayout>

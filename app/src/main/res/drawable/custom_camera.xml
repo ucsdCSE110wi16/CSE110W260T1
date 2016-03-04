@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/camera_b"
+    <item android:drawable="@drawable/camera_toolbar_b"
         android:state_pressed="true" />
-    <item android:drawable="@drawable/camera_c"
+    <item android:drawable="@drawable/camera_toolbar_b"
         android:state_focused="true" />
-    <item android:drawable="@drawable/camera_a" />
+    <item android:drawable="@drawable/camera_toolbar_a" />
 </selector>

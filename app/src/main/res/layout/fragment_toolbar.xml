@@ -5,38 +5,39 @@
     tools:context="grouphub.travelshare.ToolbarFragment">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:orientation="horizontal"
         android:id="@+id/button_layout">
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_manager"
-            android:background="@drawable/custom_manager"
-            android:layout_weight=".25"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_camera"
-            android:background="@drawable/custom_camera"
-            android:layout_weight=".40"/>
-
-        <Button
-            android:layout_width="0dp"
+            android:layout_width="86dp"
             android:layout_height="wrap_content"
             android:id="@+id/button_folders"
             android:background="@drawable/custom_folders"
-            android:layout_weight=".25"/>
+            />
+
 
         <Button
-            android:layout_width="0dp"
+            android:layout_width="147dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_camera"
+            android:background="@drawable/custom_camera"
+            />
+        <Button
+            android:layout_width="97dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_manager"
+            android:background="@drawable/custom_manager"
+            />
+
+
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button_views"
             android:background="@drawable/custom_views"
-            android:layout_weight=".10"/>
+            />
 
     </LinearLayout>
 

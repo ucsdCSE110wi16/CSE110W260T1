@@ -23,7 +23,7 @@ package grouphub.travelshare;
         import static org.hamcrest.Matchers.is;
 
 /**
- * Created by danger on 2/17/2016.
+ * Created by Christopher on 2/17/2016.
  * Given, we are logged in and on the homepage.
  * Press the button in the top right to open drop down menu
  * Press logout button

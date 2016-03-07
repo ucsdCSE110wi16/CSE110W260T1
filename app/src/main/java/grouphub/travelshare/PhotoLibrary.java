@@ -12,7 +12,7 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 
 /**
- * Created by kenme_000 on 2/6/2016.
+ * Created by Kenan Mesic on 2/6/2016.
  */
 @ParseClassName("PhotoLibrary")
 public class PhotoLibrary extends ParseObject {

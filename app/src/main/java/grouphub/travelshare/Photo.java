@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by kenme_000 on 2/7/2016.
+ * Created by Kenan Mesic on 2/7/2016.
  */
 @ParseClassName("Photo")
 public class Photo extends ParseObject {

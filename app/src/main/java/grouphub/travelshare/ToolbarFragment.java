@@ -1,6 +1,5 @@
 package grouphub.travelshare;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,8 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,30 +15,33 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import android.widget.Toast;
 
-import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private final int IMAGE_MAX_SIZE = 1080;
@@ -234,6 +234,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     // if no location is found print out filler to log
                     Log.d("latitude", "latitude: " + " No Location");
                     Log.d("longitude", "longitude: " + " No Location");
+                    Toast.makeText(getActivity(), "Could not get coordinates from GPS: Try turning GPS on?", Toast.LENGTH_LONG).show();
                 }
 
                 // Image captured and saved to fileUri specified in the Intent
@@ -247,15 +248,21 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
                     byte[] image = stream.toByteArray();
 
-                    List<Address> addresses = null;
-                    String cityName = "";
-                    Geocoder geocoder;
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+                    StrictMode.setThreadPolicy(policy);
+
+                    // get location by making request to google map api
+                    JSONObject ret = getLocationInfo(currentLoc.getLatitude(), currentLoc.getLongitude());
+                    JSONObject location;
+                    String location_string = "";
                     try {
-                        geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                        addresses = geocoder.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 1);
-                        cityName = addresses.get(0).getAddressLine(0);
-                    } catch(Exception e) {
-                        Toast.makeText(getActivity(), "Could not retrieve location", Toast.LENGTH_LONG).show();
+                        location = ret.getJSONArray("results").getJSONObject(0);
+                        location_string = location.getString("formatted_address");
+                        Toast.makeText(getActivity(), "Location: " + location_string, Toast.LENGTH_LONG).show();
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+
                     }
 
                     // Get the date, append milliseconds after it to have a unique photo name for upload to parse
@@ -265,7 +272,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
                     // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
                     // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
-                    Photo photo = new Photo(cityName,formattedDate,image, ParseUser.getCurrentUser());
+                    Photo photo = new Photo(location_string,formattedDate,image, ParseUser.getCurrentUser());
                     TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
 
                     stream.close();
@@ -283,6 +290,36 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
+    public JSONObject getLocationInfo(double lat, double lng) {
+
+        // the key is Christian's api key for google devs
+        HttpGet httpGet = new HttpGet("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&key=" + "AIzaSyCJCpYyItw0Zxw8rGRqLyU12nzlmiYlnJo");
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            response = client.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            InputStream stream = entity.getContent();
+            int b;
+            while ((b = stream.read()) != -1) {
+                stringBuilder.append((char) b);
+            }
+        } catch (ClientProtocolException e) {
+        } catch (IOException e) {
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
     /*Create our location listener we can call for retrieving current user location*/
     public void initializeLocationListener(){
         // Acquire a reference to the system Location Manager
@@ -291,13 +328,20 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                Toast.makeText(getActivity(), "Location Changed", Toast.LENGTH_LONG).show();
             }
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                Toast.makeText(getActivity(), "Status Changed", Toast.LENGTH_LONG).show();
+            }
 
-            public void onProviderEnabled(String provider) {}
+            public void onProviderEnabled(String provider) {
+                Toast.makeText(getActivity(), "Provider Enabled", Toast.LENGTH_LONG).show();
+            }
 
-            public void onProviderDisabled(String provider) {}
+            public void onProviderDisabled(String provider) {
+                Toast.makeText(getActivity(), "Provider Disabled", Toast.LENGTH_LONG).show();
+            }
         };
         //Alternativly GPS_PROVIDER
         locationProvider = LocationManager.GPS_PROVIDER;

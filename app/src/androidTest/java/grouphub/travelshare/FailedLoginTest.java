@@ -15,11 +15,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
- * Created by Christopher on 2/7/2016.
- * requires EspressoEmail to be a valid user account
+ * Created by Christopher on 3/8/2016.
+ * requires FalseInformation to not be a valid account name
+ * Or for the password to be incorrect
  */
 @RunWith(AndroidJUnit4.class)
-public class LoginTest {
+public class FailedLoginTest {
 
     @Rule
     public ActivityTestRule<Login> activityTestRule =
@@ -28,18 +29,18 @@ public class LoginTest {
     @Test
     public void LoginCheck() {
 
-        onView(withId(R.id.email)).perform(typeText("EspressoEmail")).check(matches(withText("EspressoEmail")));
-        onView(withId(R.id.password)).perform(typeText("EspressoPass")).check(matches(withText("EspressoPass")));
+        onView(withId(R.id.email)).perform(typeText("FalseInformation")).check(matches(withText("FalseInformation")));
+        onView(withId(R.id.password)).perform(typeText("anything")).check(matches(withText("anything")));
 
         onView(withId(R.id.loginButton)).perform(click());
 
         try {
-            Thread.sleep(4000);
+            Thread.sleep(2000);
         }catch(InterruptedException e) {
             e.printStackTrace();
         }
 
-        onView(withId(R.id.listview_pictures)).check(matches(withId(R.id.listview_pictures)));
+        onView(withId(R.id.login_button)).check(matches(withId(R.id.login_button)));
 
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +16,14 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 // From here : http://www.mkyong.com/android/android-gridview-example/
 public class PictureGridViewAdapter extends BaseAdapter {
@@ -106,8 +110,24 @@ public class PictureGridViewAdapter extends BaseAdapter {
 
     private void saveImagetoPhone(View v) {
         ImageView imageView = (ImageView) v.findViewById(R.id.grid_item_image);
-        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "", "");
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        String url = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, UUID.randomUUID().toString() + ".jpeg", "");
+        if(url == null) {
+            File sdcard = Environment.getExternalStorageDirectory();
+            if (sdcard != null) {
+                File mediaDir = new File(sdcard, "/sdcard/Camera");
+                if (!mediaDir.exists()) {
+                    mediaDir.mkdirs();
+                }
+                url = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, UUID.randomUUID().toString() + ".jpeg", "");
+                if(url == null) {
+                    Toast.makeText(context, "Failed to save image to gallery!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        else {
+            Toast.makeText(context, "Saved image to gallery successfully!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

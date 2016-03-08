@@ -5,14 +5,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.UUID;
 
 // This is where the code came from
 // https://www.codementor.io/tips/3473732891/how-to-combine-an-imageview-with-some-text-in-listview
@@ -74,8 +80,24 @@ public class PictureRow {
     }
 
     private void saveImagetoPhone() {
-        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", this.textView.getText().toString());
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        String url = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, UUID.randomUUID().toString() + ".jpeg", this.textView.getText().toString());
+        if(url == null) {
+            File sdcard = Environment.getExternalStorageDirectory();
+            if (sdcard != null) {
+                File mediaDir = new File(sdcard, "/sdcard/Camera");
+                if (!mediaDir.exists()) {
+                    mediaDir.mkdirs();
+                }
+                url = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, UUID.randomUUID().toString() + ".jpeg", this.textView.getText().toString());
+                if(url == null) {
+                    Toast.makeText(context, "Failed to save image to gallery!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        else {
+            Toast.makeText(context, "Saved image to gallery successfully!", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void bind(PictureViewModel viewModel) {

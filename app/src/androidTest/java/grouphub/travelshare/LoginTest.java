@@ -16,6 +16,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by Christopher on 2/7/2016.
+ * requires EspressoEmail to be a valid user account
  */
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
@@ -33,7 +34,7 @@ public class LoginTest {
         onView(withId(R.id.loginButton)).perform(click());
 
         try {
-            Thread.sleep(8000);
+            Thread.sleep(4000);
         }catch(InterruptedException e) {
             e.printStackTrace();
         }

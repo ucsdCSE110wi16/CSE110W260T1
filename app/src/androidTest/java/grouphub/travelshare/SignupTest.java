@@ -17,6 +17,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by Christopher on 2/7/2016.
+ * User EspressoTestSignup must not already exist in order for test to pass
+ * If User exists already, remove them from parse DB.
  */
 @RunWith(AndroidJUnit4.class)
 public class SignupTest {

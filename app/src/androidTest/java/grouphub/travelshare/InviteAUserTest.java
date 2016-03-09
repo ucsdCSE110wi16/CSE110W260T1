@@ -74,7 +74,7 @@ public class InviteAUserTest {
             e.printStackTrace();
         }
 
-        //onView(withText("User invited!")).inRoot(withDecorView(not(activityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        onView(withText("User invited!")).inRoot(withDecorView(not(activityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 
 
         onView(allOf(withId(R.id.button_manager), FirstViewMatcher.firstView())).perform(click());
@@ -86,7 +86,6 @@ public class InviteAUserTest {
         }
 
 
-        //InviteMessageTest but concatenated to this test
 
 
         try {
@@ -123,11 +122,7 @@ public class InviteAUserTest {
             e.printStackTrace();
         }
 
-
-
-        onView(withId(R.id.listview_pictures)).check(matches(withId(R.id.listview_pictures)));
-
-        onView(withText("You have received an invitation to join")).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText("You have received an invitation to join Dummy Group! Accept?")).inRoot(isDialog()).check(matches(isDisplayed()));
 
 
 

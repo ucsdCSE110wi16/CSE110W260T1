@@ -6,4 +6,5 @@ On a completely clean device:
 3. Logout Test
 4. Log in Test
 5. Invite A User Test
+After accepting or denying the initial invite.
 6. Camera Test

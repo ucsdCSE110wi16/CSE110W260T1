@@ -254,11 +254,17 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
                     // get location by making request to google map api
                     JSONObject ret = getLocationInfo(currentLoc.getLatitude(), currentLoc.getLongitude());
-                    JSONObject location;
+                    JSONObject city;
+                    JSONObject state;
                     String location_string = "";
+                    String cityName = "";
+                    String stateName = "";
                     try {
-                        location = ret.getJSONArray("results").getJSONObject(0);
-                        location_string = location.getString("formatted_address");
+                        city = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(3);
+                        state = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(5);
+                        cityName = city.getString("long_name");
+                        stateName = state.getString("long_name");
+                        location_string = cityName + ", " + stateName;
                         Toast.makeText(getActivity(), "Location: " + location_string, Toast.LENGTH_LONG).show();
                     } catch (JSONException e1) {
                         e1.printStackTrace();

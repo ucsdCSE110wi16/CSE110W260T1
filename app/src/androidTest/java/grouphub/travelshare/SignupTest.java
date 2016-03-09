@@ -1,5 +1,6 @@
 package grouphub.travelshare;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -40,7 +41,17 @@ public class SignupTest {
         onView(withId(R.id.passwordSignUp)).perform(typeText("espresso")).check(matches(withText("espresso")));
         onView(withId(R.id.confpasswordSignUp)).perform(typeText("espresso")).check(matches(withText("espresso")));
 
+        Espresso.closeSoftKeyboard();
+
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
         onView(withId(R.id.signupButton)).perform(click());
+
+
 
         try {
             Thread.sleep(4000);

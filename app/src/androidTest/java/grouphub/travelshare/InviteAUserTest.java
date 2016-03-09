@@ -77,7 +77,7 @@ public class InviteAUserTest {
         onView(withText("User invited!")).inRoot(withDecorView(not(activityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 
 
-        onView(allOf(withId(R.id.button_manager), FirstViewMatcher.firstView())).perform(click());
+        onView(allOf(withId(R.id.button_views), FirstViewMatcher.firstView())).perform(click());
 
         try {
             Thread.sleep(5000);

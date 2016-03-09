@@ -1,5 +1,6 @@
 package grouphub.travelshare;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -62,6 +63,7 @@ public class CreateGroupTest {
         }
 
         onView(withId(R.id.edittext_prompt)).perform(ViewActions.pressImeActionButton());
+        Espresso.closeSoftKeyboard();
 
         try {
             Thread.sleep(1000);
@@ -69,7 +71,7 @@ public class CreateGroupTest {
             e.printStackTrace();
         }
 
-        onView(allOf(withId(R.id.button_manager), FirstViewMatcher.firstView())).perform(click());
+        onView(allOf(withId(R.id.button_views), FirstViewMatcher.firstView())).perform(click());
 
         try {
             Thread.sleep(1000);

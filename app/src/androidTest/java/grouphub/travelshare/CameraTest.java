@@ -30,7 +30,7 @@ public class CameraTest {
     public void CameraCheck() {
 
         Intents.init();
-        activityTestRule.launchActivity(new Intent());
+        //activityTestRule.launchActivity(new Intent());
 
         try {
             Thread.sleep(2000);

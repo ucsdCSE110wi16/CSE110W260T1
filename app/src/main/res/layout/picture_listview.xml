@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/picture"
-        android:layout_width="612px"
-        android:layout_height="612px"
+        android:layout_width="1224px"
+        android:layout_height="816px"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:src="@drawable/invalid_image"
@@ -29,8 +29,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:background="#00000000"
-        android:textColor="@color/colorPrimary"
-        android:text="where / when"/>
+        android:textColor="@color/colorPrimary" />
 
     <!-- Leaving out comments for now-->
     <!--<ScrollView-->

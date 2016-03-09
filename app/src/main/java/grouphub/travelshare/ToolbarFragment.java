@@ -78,6 +78,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     }
 
     public static ToolbarFragment newInstance(HomepageFragment param1, GroupFragment param2, FoldersFragment param3) {
+        Log.d("toolbarfrag", "Created toolbar frag");
         ToolbarFragment fragment = new ToolbarFragment();
         Bundle args = new Bundle();
         args.putSerializable(HOMEPAGE_KEY, param1);
@@ -221,6 +222,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Could not get coordinates from GPS: Try turning GPS on?", Toast.LENGTH_LONG).show();
                 }
 
+                String location = ""; // default value of location
+
                 // Image captured and saved to fileUri specified in the Intent
                 //Bitmap bitmap = BitmapFactory.decodeFile(uriSavedImage.toString().substring(7)); // get correct fileurl
                 try {
@@ -232,30 +235,33 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
                     byte[] image = stream.toByteArray();
 
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-                    StrictMode.setThreadPolicy(policy);
-
-                    // get location by making request to google map api
-                    JSONObject ret = getLocationInfo(currentLoc.getLatitude(), currentLoc.getLongitude());
-                    JSONObject city;
-                    JSONObject state;
-                    String location_string = "";
-                    String cityName = "";
-                    String stateName = "";
                     try {
-                        city = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(3);
-                        state = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(5);
-                        cityName = city.getString("long_name");
-                        Log.d("CITYNAME: ", cityName);
-                        stateName = state.getString("long_name");
-                        Log.d("STATENAME: ", stateName);
-                        location_string = cityName + ", " + stateName;
-                        Toast.makeText(getActivity(), "Location: " + location_string, Toast.LENGTH_LONG).show();
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-                    }
+                        StrictMode.setThreadPolicy(policy);
+
+                        // get location by making request to google map api
+                        JSONObject ret = getLocationInfo(currentLoc.getLatitude(), currentLoc.getLongitude());
+                        JSONObject city;
+                        JSONObject state;
+                        String location_string = "";
+                        String cityName = "";
+                        String stateName = "";
+                        try {
+                            city = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(3);
+                            state = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(5);
+                            cityName = city.getString("long_name");
+                            Log.d("CITYNAME: ", cityName);
+                            stateName = state.getString("long_name");
+                            Log.d("STATENAME: ", stateName);
+                            location_string = cityName + ", " + stateName;
+                            Toast.makeText(getActivity(), "Location: " + location_string, Toast.LENGTH_LONG).show();
+                            location = location_string;
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+
+                        }
+                    } catch(Exception e) {}
 
                     // Get the date, append milliseconds after it to have a unique photo name for upload to parse
                     Calendar c = Calendar.getInstance();
@@ -264,7 +270,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
                     // CREATE NEW PHOTO HERE. USE THE PHOTO CLASS, IT WILL WRITE TO PARSE DATABASE
                     // Photo photo = new Photo(currentLoc, image, ParseUser.getCurrentUser());
-                    Photo photo = new Photo(location_string,formattedDate,image, ParseUser.getCurrentUser());
+                    Photo photo = new Photo(location,formattedDate,image, ParseUser.getCurrentUser());
                     TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()).addPhoto(photo);
 
                     stream.close();

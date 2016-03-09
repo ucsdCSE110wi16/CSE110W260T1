@@ -28,8 +28,8 @@ public class LoginTest {
     @Test
     public void LoginCheck() {
 
-        onView(withId(R.id.email)).perform(typeText("EspressoEmail")).check(matches(withText("EspressoEmail")));
-        onView(withId(R.id.password)).perform(typeText("EspressoPass")).check(matches(withText("EspressoPass")));
+        onView(withId(R.id.email)).perform(typeText("TestingInvitee")).check(matches(withText("TestingInvitee")));
+        onView(withId(R.id.password)).perform(typeText("test")).check(matches(withText("test")));
 
         onView(withId(R.id.loginButton)).perform(click());
 

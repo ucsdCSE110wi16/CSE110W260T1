@@ -7,14 +7,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 
@@ -26,8 +29,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 public class InviteAUserTest {
 
     @Rule
-    public ActivityTestRule<Main> activityTestRule =
-            new ActivityTestRule<>(Main.class);
+    public ActivityTestRule<Login> activityTestRule =
+            new ActivityTestRule<>(Login.class);
 
     @Test
     public void InviteAUserCheck() {
@@ -55,7 +58,7 @@ public class InviteAUserTest {
             e.printStackTrace();
         }
 
-        onView(withId(R.id.edittext_prompt)).perform(typeText("TestingInvitee"));
+        onView(withId(R.id.edittext_prompt)).perform(typeText("EspressoTestSignup"));
 
         try {
             Thread.sleep(1000);
@@ -72,6 +75,55 @@ public class InviteAUserTest {
         }
 
         onView(withText("User invited!")).inRoot(withDecorView(not(activityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+
+        onView(allOf(withId(R.id.button_manager), FirstViewMatcher.firstView())).perform(click());
+
+        try {
+            Thread.sleep(5000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(withId(R.id.dropdown_menu)).perform(click());
+
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onData(anything()).atPosition(1).perform(click());
+
+        try {
+            Thread.sleep(3000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.login_button)).check(matches(withId(R.id.login_button)));
+
+        onView(withId(R.id.email)).perform(typeText("EspressoTestSignup")).check(matches(withText("EspressoTestSignup")));
+        onView(withId(R.id.password)).perform(typeText("espresso")).check(matches(withText("espresso")));
+
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try {
+            Thread.sleep(3000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(withText("You have received an invitation to join Dummy Group! Accept?")).inRoot(isDialog()).check(matches(isDisplayed()));
+
 
 
     }

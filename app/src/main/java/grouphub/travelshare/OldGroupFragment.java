@@ -62,7 +62,7 @@ public class OldGroupFragment extends Fragment implements Serializable {
             Log.d(TAG, "Problem accessing current travel group");
 
         if (view == null) {
-            view = inflater.inflate(R.layout.fragment_homepage, container, false);
+            view = inflater.inflate(R.layout.fragment_oldgroup, container, false);
 
             oldTravelGroup = (TravelGroup) getArguments().getSerializable(
                     OLD_GROUP_KEY);
@@ -80,40 +80,6 @@ public class OldGroupFragment extends Fragment implements Serializable {
 
 //            mainViewGrid.setVisibility(view.INVISIBLE); // hide the grid view and shows listview by default
 
-            swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-
-            // next bit of code with setonscrolllistener is a bit of a workaround for having multiple
-            // list/grid views inside a swiperefreshlayout
-            // allows scrolling up without forced refreshing
-            mainViewList.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    int topRowVerticalPosition =
-                            (mainViewList == null || mainViewList.getChildCount() == 0) ?
-                                    0 : mainViewList.getChildAt(0).getTop();
-                    swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-                }
-            });
-
-//            mainViewGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
-//                @Override
-//                public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//                }
-//
-//                @Override
-//                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                    int topRowVerticalPosition =
-//                            (mainViewGrid == null || mainViewGrid.getChildCount() == 0) ?
-//                                    0 : mainViewGrid.getChildAt(0).getTop();
-//                    swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-//                }
-//            });
         }
 
         return view;

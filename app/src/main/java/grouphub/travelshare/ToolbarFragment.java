@@ -60,11 +60,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private Button buttonManager;
     private Button buttonCamera;
     private Button buttonViews;
-    
-    // All buttons start out as not being pressed
-    private Boolean buttonFoldersPressed = false;
-    private Boolean buttonManagerPressed = false;
-    private Boolean buttonViewsPressed = false;
+
+    private Boolean onHomepage;
 
     //manage user location information
     private LocationManager locationManager;
@@ -78,7 +75,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
 
     public ToolbarFragment() {
         // Required empty public constructor
-
     }
 
     public static ToolbarFragment newInstance(HomepageFragment param1, GroupFragment param2, FoldersFragment param3) {
@@ -121,30 +117,26 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         buttonManager.setOnClickListener(this);
         buttonViews.setOnClickListener(this);
 
+        onHomepage = true;
+
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        Fragment fragment;
         FragmentManager Manager = getFragmentManager();
         FragmentTransaction trans = Manager.beginTransaction();
+
+        // Destroy oldGroupFragment
+        trans.remove(Manager.findFragmentById(R.id.placeholder));
 
         // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
-                if (buttonFoldersPressed) {
-                    trans.replace(R.id.placeholder, fragmentHomepage);
-                    trans.addToBackStack(null);
-                    trans.commit();
-                    resetButtonPress();
-                } else {
-                    trans.replace(R.id.placeholder, fragmentFolders);
-                    trans.addToBackStack(null);
-                    trans.commit();
-                    resetButtonPress();
-                    buttonFoldersPressed = true;
-                }
+                trans.replace(R.id.placeholder, fragmentFolders);
+                trans.addToBackStack(null);
+                trans.commit();
+                onHomepage=false;
                 break;
             case R.id.button_camera:
                 if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) != null)
@@ -153,31 +145,23 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Cannot use camera because\nyou are not in a group", Toast.LENGTH_LONG).show();
                 break;
             case R.id.button_manager:
-                if (buttonManagerPressed) {
+                trans.replace(R.id.placeholder, fragmentGroup);
+                trans.addToBackStack(null);
+                trans.commit();
+                onHomepage=false;
+                break;
+            case R.id.button_views:
+                if(onHomepage)
+                    fragmentHomepage.switchView();
+                else {
                     trans.replace(R.id.placeholder, fragmentHomepage);
                     trans.addToBackStack(null);
                     trans.commit();
-                    resetButtonPress();
-                } else {
-                    trans.replace(R.id.placeholder, fragmentGroup);
-                    trans.addToBackStack(null);
-                    trans.commit();
-                    resetButtonPress();
-                    buttonManagerPressed = true;
                 }
                 break;
-            case R.id.button_views:
-                fragmentHomepage.switchView();
-                break;
+
         }
 
-    }
-
-    // Resets button presses
-    public void resetButtonPress() {
-        buttonManagerPressed = false;
-        buttonFoldersPressed = false;
-        buttonViewsPressed = false;
     }
 
     // I wonder if fragment is actually deleted or put into some background mode... may affect performance

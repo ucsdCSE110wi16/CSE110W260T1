@@ -9,6 +9,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  */
 
 @ParseClassName("TravelGroup")
-public class TravelGroup extends ParseObject {
+public class TravelGroup extends ParseObject implements Serializable{
     private static final String TAG = "TravelGroup";
 
     // Default no arg constructor required by Parse subclass
@@ -236,13 +237,14 @@ public class TravelGroup extends ParseObject {
 
     public static ArrayList<TravelGroup> getTravelGroups(ParseUser user) {
         //TODO: create method to return list of travel groups connected to user
-        try {
-            return (ArrayList<TravelGroup>) user.fetchIfNeeded().get("groups");
-        }
-        catch(ParseException e) {
-            Log.d(TAG, "Error in retrieving the travel groups associated with the user: " +  e);
-            return null;
-        }
+//        try {
+//            return (ArrayList<TravelGroup>) user.fetchIfNeeded().get("groups");
+//        }
+//        catch(ParseException e) {
+//            Log.d(TAG, "Error in retrieving the travel groups associated with the user: " +  e);
+//            return null;
+//        }
+        return (ArrayList<TravelGroup>) user.get("groups");
     }
 
     // Get all photos from photo library

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300px"
+    android:background="#000"
+    android:id="@+id/row_history">
+
+    <ImageView
+        android:id="@+id/picture_history"
+        android:layout_width="300px"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/group_name_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@+id/picture"
+        android:layout_alignBottom="@+id/picture"
+        android:text="Dummy Text"
+        android:textSize="20sp"
+        android:layout_toRightOf="@+id/picture_history"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary" />
+
+</RelativeLayout>

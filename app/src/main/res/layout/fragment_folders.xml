@@ -5,11 +5,20 @@
     tools:context="grouphub.travelshare.FoldersFragment"
     android:id="@+id/folderFrag" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_history"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="I shall become a folders page"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listview_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/colorPrimary"
+            android:dividerHeight="2px">
+
+        </ListView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

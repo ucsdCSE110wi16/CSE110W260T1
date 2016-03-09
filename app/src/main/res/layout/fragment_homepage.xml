@@ -43,24 +43,10 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_margin="5dp"
-                    android:text="'A journey is best measured in friends, rather than miles.' – Tim Cahill"
-                    android:typeface="serif"
-                    />
-
-                <!--android:text="Sea Legs lad grog blossom topsail Pieces of Eight hearties loot. Swing the lead driver gabion killick gunwalls shrouds scallywag. Pirate Round Letter of Marque strike colors bilge flogging lee galleon\n'A journey is best measured in friends, rather than miles.'\n– Tim Cahill"-->
-
                 <ListView
                     android:id="@+id/listview_pictures"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     />
 
                 <GridView

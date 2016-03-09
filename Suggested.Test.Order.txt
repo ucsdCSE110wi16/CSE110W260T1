@@ -2,8 +2,8 @@ On a completely clean device:
 
 0. Failed log in test (FalseInformation must not exist in parse for test to pass)
 1. Signup Test (EspressoTestSignup must not exist in Parse for test to pass)
-2. Logout Test
-3. Log in Test
-4. Create Group Test
+2. Create Group Test
+3. Logout Test
+4. Log in Test
 5. Invite A User Test
 6. Camera Test

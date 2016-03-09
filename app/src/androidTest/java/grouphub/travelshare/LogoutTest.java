@@ -47,7 +47,7 @@ public class LogoutTest {
         onData(anything()).atPosition(1).perform(click());
 
         try {
-            Thread.sleep(7000);
+            Thread.sleep(4000);
         }catch(InterruptedException e) {
             e.printStackTrace();
         }

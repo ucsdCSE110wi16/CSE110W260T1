@@ -1,6 +1,5 @@
 package grouphub.travelshare;
 
-import android.app.ProgressDialog;
 import android.location.Location;
 import android.util.Log;
 
@@ -41,8 +40,10 @@ public class Photo extends ParseObject {
         Calendar c = Calendar.getInstance();
         String unique = c.get(Calendar.DATE) + "" + c.get(Calendar.HOUR_OF_DAY) + "" + c.get(Calendar.MINUTE) + "" + c.get(Calendar.MILLISECOND) + "";
 
+        String newScreenName = (String) creater.get("screenName");
+        newScreenName = newScreenName.replace(" ", "");
         ArrayList<ParseObject> comments = new ArrayList<ParseObject>();
-        ParseFile pic = new ParseFile(creater.get("screenName") + unique + ".jpg", data);
+        ParseFile pic = new ParseFile(newScreenName + unique + ".jpg", data);
         put("comments", comments);
         put("cityName", cityName);
         put("date", date);

@@ -72,7 +72,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                                 // The user was not found. Go ahead and sign them up
                                                 // sign the facebook user up via parse
                                                 ParseUser user = new ParseUser();
-                                                user.setEmail(email);
                                                 user.setPassword("F");
                                                 user.setUsername(email);
 

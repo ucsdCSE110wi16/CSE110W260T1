@@ -263,7 +263,9 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                         city = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(3);
                         state = ret.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(5);
                         cityName = city.getString("long_name");
+                        Log.d("CITYNAME: ", cityName);
                         stateName = state.getString("long_name");
+                        Log.d("STATENAME: ", stateName);
                         location_string = cityName + ", " + stateName;
                         Toast.makeText(getActivity(), "Location: " + location_string, Toast.LENGTH_LONG).show();
                     } catch (JSONException e1) {

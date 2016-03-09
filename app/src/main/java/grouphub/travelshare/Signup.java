@@ -76,6 +76,7 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
                     Toast.makeText(Signup.this, "SIGNED UP", Toast.LENGTH_LONG).show();
                     Intent intent_home = new Intent(Signup.this, Main.class);
                     startActivity(intent_home);
+                    finish();
                 }
                 else {
                     Toast.makeText(Signup.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();

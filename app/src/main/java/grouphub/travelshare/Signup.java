@@ -57,10 +57,12 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
             errors = true;
         }
 
-        //TODO: check email
+        if (errors == true){
+            return false;
+        }
 
         ParseUser user = new ParseUser();
-       // user.setEmail(email);
+        // user.setEmail(email); DEPCRICATED
         user.setPassword(password);
         user.setUsername(email);
 

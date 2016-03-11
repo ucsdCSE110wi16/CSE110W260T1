@@ -82,7 +82,8 @@ public class TravelGroup extends ParseObject implements Serializable{
             return;
         }
         // now send the invite to the user
-        user.put("invitationID", groupID);
+        InvitationID invitation = (InvitationID) user.getParseObject("invitationID");
+        invitation.putId(groupID);
     }
 
     // Return unique id of the object

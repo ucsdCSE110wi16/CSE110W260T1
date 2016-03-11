@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
@@ -54,9 +55,10 @@ public class HomepageFragment extends Fragment implements Serializable{
 
         // check if the current user has any group invitations, if it does, then receive the invitation
         ParseUser currentUser = ParseUser.getCurrentUser();
-        String invitation = (String) currentUser.get("invitationID");
-        if (!invitation.equals("0") && !invitation.equals("")){
-            receiveInvitation(invitation);
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
+        String invitationId = invitation.getId();
+        if (!invitationId.equals("0") && !invitationId.equals("")){
+            receiveInvitation(invitationId);
         }
 
     }
@@ -232,7 +234,8 @@ public class HomepageFragment extends Fragment implements Serializable{
 
         // set the invitations the user has to none
         ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.put("invitationID", "0");
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
+        invitation.putId("0");
 
         //UPDATE HOMEPAGE GROUPNAME TITLE AND PICTURES IF USER ACCEPTED INVITE TO A NEW GROUP
         reinitializePictures();
@@ -242,7 +245,8 @@ public class HomepageFragment extends Fragment implements Serializable{
     protected void rejectInvitation(){
         // set the invitations the user has to none
         ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.put("invitationID", "0");
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
+        invitation.putId("0");
     }
 
 }

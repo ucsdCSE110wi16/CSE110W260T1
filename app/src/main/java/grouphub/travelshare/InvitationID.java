@@ -34,15 +34,12 @@ public class InvitationID extends ParseObject {
     public InvitationID(boolean holder) {
         super();
         put("inviteId", "0");
-        saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.d(TAG, "Error creating InvitationID: " + e);
-                }
-
-            }
-        });
+        try {
+            save();
+        }
+        catch(ParseException e) {
+            Log.d(TAG, "Error saving InvitationID: " + e);
+        }
     }
 
     /*

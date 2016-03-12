@@ -67,7 +67,9 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         user.setUsername(email);
 
         user.put("screenName", username);
-        user.put("invitationID",Integer.toString(0));
+
+        InvitationID invitations = new InvitationID(true);
+        user.put("invitationID", invitations);
 
         user.signUpInBackground(new SignUpCallback() {
             @Override

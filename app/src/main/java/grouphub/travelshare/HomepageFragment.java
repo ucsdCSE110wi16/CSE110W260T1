@@ -49,6 +49,8 @@ public class HomepageFragment extends Fragment implements Serializable{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
@@ -56,7 +58,7 @@ public class HomepageFragment extends Fragment implements Serializable{
         // check if the current user has any group invitations, if it does, then receive the invitation
         ParseUser currentUser = ParseUser.getCurrentUser();
         InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
-        String invitationId = invitation.getId();
+        String invitationId = invitation.getInviteId();
         if (!invitationId.equals("0") && !invitationId.equals("")){
             receiveInvitation(invitationId);
         }

@@ -57,7 +57,7 @@ public class HomepageFragment extends Fragment implements Serializable{
 
         // check if the current user has any group invitations, if it does, then receive the invitation
         ParseUser currentUser = ParseUser.getCurrentUser();
-        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationBox");
         String invitationId = invitation.getInviteId();
         if (!invitationId.equals("0") && !invitationId.equals("")){
             receiveInvitation(invitationId);
@@ -236,7 +236,7 @@ public class HomepageFragment extends Fragment implements Serializable{
 
         // set the invitations the user has to none
         ParseUser currentUser = ParseUser.getCurrentUser();
-        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationBox");
         invitation.putId("0");
 
         //UPDATE HOMEPAGE GROUPNAME TITLE AND PICTURES IF USER ACCEPTED INVITE TO A NEW GROUP
@@ -247,7 +247,7 @@ public class HomepageFragment extends Fragment implements Serializable{
     protected void rejectInvitation(){
         // set the invitations the user has to none
         ParseUser currentUser = ParseUser.getCurrentUser();
-        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationID");
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationBox");
         invitation.putId("0");
     }
 

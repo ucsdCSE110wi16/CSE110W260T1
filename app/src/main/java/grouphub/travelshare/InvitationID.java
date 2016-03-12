@@ -64,7 +64,7 @@ public class InvitationID extends ParseObject {
      * Add photo to the Photo Library in parse
      */
     public void putId(String id) {
-        add("inviteId", id);
+        put("inviteId", id);
         saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

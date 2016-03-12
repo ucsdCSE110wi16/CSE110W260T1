@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
@@ -55,13 +56,7 @@ public class HomepageFragment extends Fragment implements Serializable{
         if (getArguments() != null) {
         }
 
-        // check if the current user has any group invitations, if it does, then receive the invitation
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationBox");
-        String invitationId = invitation.getInviteId();
-        if (!invitationId.equals("0") && !invitationId.equals("")){
-            receiveInvitation(invitationId);
-        }
+        checkInvitations();
 
     }
 
@@ -94,6 +89,7 @@ public class HomepageFragment extends Fragment implements Serializable{
                 public void onRefresh() {
                     reinitializePictures();
                     swipelayout.setRefreshing(false);
+                    checkInvitations();
                 }
             });
 
@@ -207,6 +203,7 @@ public class HomepageFragment extends Fragment implements Serializable{
         // get the group object based off the groupID
         final TravelGroup group = TravelGroup.getTravelGroup(groupID);
         String groupName = (String) group.get("groupName");
+        Log.d(TAG, "receiveInvitation before dialog is made");
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -249,6 +246,23 @@ public class HomepageFragment extends Fragment implements Serializable{
         ParseUser currentUser = ParseUser.getCurrentUser();
         InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationBox");
         invitation.putId("0");
+    }
+
+    private void checkInvitations(){
+        // check if the current user has any group invitations, if it does, then receive the invitation
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        InvitationID invitation = (InvitationID) currentUser.getParseObject("invitationBox");
+        try{
+            invitation.fetch();
+        }catch(ParseException e){
+            Log.d(TAG, "Error: " + e);
+        }
+        String invitationId = invitation.getInviteId();
+        Log.d(TAG, "CheckInviations before if statement");
+        if (!invitationId.equals("0") && !invitationId.equals("")){
+            Log.d(TAG, "CheckInviations inside if statement");
+            receiveInvitation(invitationId);
+        }
     }
 
 }

@@ -6,5 +6,4 @@ On a completely clean device:
 3. Logout Test
 4. Log in Test
 5. Invite A User Test
-After accepting the initial invite.
-6. Camera Test
+6. Invite Message Test

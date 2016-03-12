@@ -25,7 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
  * Created by Christopher on 3/11/2016.
  */
 @RunWith(AndroidJUnit4.class)
-public class InvitationMessageTest {
+public class GInvitationMessageTest {
 
     @Rule
     public ActivityTestRule<Main> activityTestRule =
@@ -69,8 +69,7 @@ public class InvitationMessageTest {
             e.printStackTrace();
         }
 
-        onView(withText("You have received an invitation to join Dummy Group! Accept?")).inRoot(isDialog()).check(matches(isDisplayed()));
-
+        onView(withText("You have received an invitation to join winterUcsd! Accept?")).inRoot(isDialog()).check(matches(isDisplayed()));
 
     }
 }

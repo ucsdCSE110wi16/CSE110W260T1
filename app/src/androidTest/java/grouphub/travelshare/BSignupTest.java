@@ -22,7 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * If User exists already, remove them from parse DB.
  */
 @RunWith(AndroidJUnit4.class)
-public class SignupTest {
+public class BSignupTest {
 
     // Preferred JUnit 4 mechanism of specifying the activity to be launched before each test
     @Rule

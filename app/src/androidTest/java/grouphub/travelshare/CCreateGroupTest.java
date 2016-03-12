@@ -1,39 +1,35 @@
 package grouphub.travelshare;
 
-import android.support.test.runner.AndroidJUnit4;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.not;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 
 /**
- * Created by Christopher on 3/7/2016.
+ * Created by Christopher on 3/6/2016.
  * requires an account to be already logged into the app.
  */
 @RunWith(AndroidJUnit4.class)
-public class InviteAUserTest {
+public class CCreateGroupTest {
 
     @Rule
-    public ActivityTestRule<Login> activityTestRule =
-            new ActivityTestRule<>(Login.class);
+    public ActivityTestRule<Main> activityTestRule =
+            new ActivityTestRule<>(Main.class);
 
     @Test
-    public void InviteAUserCheck() {
+    public void CreateGroupCheck() {
 
         try {
             Thread.sleep(1000);
@@ -50,7 +46,7 @@ public class InviteAUserTest {
             e.printStackTrace();
         }
 
-        onView(withId(R.id.button_inviteusertogroup)).perform(click());
+        onView(withId(R.id.button_creategroup)).perform(click());
 
         try {
             Thread.sleep(1000);
@@ -58,7 +54,7 @@ public class InviteAUserTest {
             e.printStackTrace();
         }
 
-        onView(withId(R.id.edittext_prompt)).perform(typeText("EspressoTestSignup"));
+        onView(withId(R.id.edittext_prompt)).perform(typeText("CreateGroupScenario"));
 
         try {
             Thread.sleep(1000);
@@ -67,25 +63,27 @@ public class InviteAUserTest {
         }
 
         onView(withId(R.id.edittext_prompt)).perform(ViewActions.pressImeActionButton());
+        Espresso.closeSoftKeyboard();
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         }catch(InterruptedException e) {
             e.printStackTrace();
         }
 
-        onView(withText("User invited!")).inRoot(withDecorView(not(activityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-
+        onView(allOf(withId(R.id.button_views), FirstViewMatcher.firstView())).perform(click());
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         }catch(InterruptedException e) {
             e.printStackTrace();
         }
 
 
-
+        onView(withId(R.id.group_name_text)).check(matches(withText("CreateGroupScenario")));
 
     }
 
 }
+
+

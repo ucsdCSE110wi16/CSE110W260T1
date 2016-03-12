@@ -21,7 +21,7 @@ package grouphub.travelshare;
  * result: logged out in the login screen
  */
 @RunWith(AndroidJUnit4.class)
-public class LogoutTest {
+public class DLogoutTest {
 
     @Rule
     public ActivityTestRule<Main> activityTestRule =

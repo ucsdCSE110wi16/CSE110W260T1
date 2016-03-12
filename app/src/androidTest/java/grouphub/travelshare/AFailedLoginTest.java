@@ -20,7 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * Or for the password to be incorrect
  */
 @RunWith(AndroidJUnit4.class)
-public class FailedLoginTest {
+public class AFailedLoginTest {
 
     @Rule
     public ActivityTestRule<Login> activityTestRule =
@@ -28,6 +28,11 @@ public class FailedLoginTest {
 
     @Test
     public void LoginCheck() {
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
 
         onView(withId(R.id.email)).perform(typeText("FalseInformation")).check(matches(withText("FalseInformation")));
         onView(withId(R.id.password)).perform(typeText("anything")).check(matches(withText("anything")));

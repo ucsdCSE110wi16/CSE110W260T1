@@ -19,7 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * requires EspressoEmail to be a valid user account
  */
 @RunWith(AndroidJUnit4.class)
-public class LoginTest {
+public class ELoginTest {
 
     @Rule
     public ActivityTestRule<Login> activityTestRule =

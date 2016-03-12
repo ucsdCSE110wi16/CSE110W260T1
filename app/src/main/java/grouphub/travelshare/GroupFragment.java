@@ -54,8 +54,10 @@ public class GroupFragment extends Fragment implements Serializable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+        if(savedInstanceState == null)
+            fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
+                    HOMEPAGE_KEY);
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,8 +65,6 @@ public class GroupFragment extends Fragment implements Serializable {
 
         view = inflater.inflate(R.layout.fragment_group, container, false);
 
-        fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
-                HOMEPAGE_KEY);
 
         button_creategroup = (Button) view.findViewById(R.id.button_creategroup);
         button_creategroup.setOnClickListener(new View.OnClickListener() {

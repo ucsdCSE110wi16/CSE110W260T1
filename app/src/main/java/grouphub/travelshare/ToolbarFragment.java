@@ -91,22 +91,22 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if(savedInstanceState == null) {
+            fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
+                    HOMEPAGE_KEY);
+            fragmentGroup = (GroupFragment) getArguments().getSerializable(
+                    GROUP_KEY);
+            fragmentFolders = (FoldersFragment) getArguments().getSerializable(
+                    FOLDERS_KEY);
+
+            lastKnownLocation = null;
         }
-        lastKnownLocation = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_toolbar, container, false);
-
-        fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
-                HOMEPAGE_KEY);
-        fragmentGroup = (GroupFragment) getArguments().getSerializable(
-                GROUP_KEY);
-        fragmentFolders = (FoldersFragment) getArguments().getSerializable(
-                FOLDERS_KEY);
 
         buttonFolders = (Button) view.findViewById(R.id.button_folders);
         buttonCamera = (Button) view.findViewById(R.id.button_camera);

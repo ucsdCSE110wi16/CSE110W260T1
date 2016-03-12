@@ -50,16 +50,16 @@ public class OldGroupFragment extends Fragment implements Serializable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+
+        if(savedInstanceState==null) {
+            if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null)
+                Log.d(TAG, "Problem accessing current travel group");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null)
-            Log.d(TAG, "Problem accessing current travel group");
 
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_oldgroup, container, false);

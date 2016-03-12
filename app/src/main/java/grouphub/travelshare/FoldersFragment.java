@@ -46,31 +46,27 @@ public class FoldersFragment extends Fragment implements Serializable{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_folders, container, false);
+        view = inflater.inflate(R.layout.fragment_folders, container, false);
 
-            historyView = (ListView) view.findViewById(R.id.listview_history);
+        historyView = (ListView) view.findViewById(R.id.listview_history);
 
-            viewModels = new ArrayList<>();
+        viewModels = new ArrayList<>();
 
-            initializeFolders();
+        initializeFolders();
 
-            swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_history);
-            swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    reinitializeFolders();
-                    swipelayout.setRefreshing(false);
-                }
-            });
-        }
+        swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_history);
+        swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reinitializeFolders();
+                swipelayout.setRefreshing(false);
+            }
+        });
 
         return view;
     }

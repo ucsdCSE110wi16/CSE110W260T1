@@ -53,10 +53,12 @@ public class HomepageFragment extends Fragment implements Serializable{
 
 
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
 
-        checkInvitations();
+        if(savedInstanceState==null) {
+            if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null)
+                Log.d(TAG, "Problem accessing current travel group");
+            checkInvitations();
+        }
 
     }
 
@@ -64,68 +66,63 @@ public class HomepageFragment extends Fragment implements Serializable{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null)
-            Log.d(TAG, "Problem accessing current travel group");
+        view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_homepage, container, false);
+        textViewGroupName = (TextView) view.findViewById(R.id.group_name_text);
+        resetGroupName(); // on top bar
 
-            textViewGroupName = (TextView) view.findViewById(R.id.group_name_text);
-            resetGroupName(); // on top bar
+        mainViewList = (ListView) view.findViewById(R.id.listview_pictures);
+        mainViewGrid = (GridView) view.findViewById(R.id.gridview_pictures);
 
-            mainViewList = (ListView) view.findViewById(R.id.listview_pictures);
-            mainViewGrid = (GridView) view.findViewById(R.id.gridview_pictures);
+        viewModels = new ArrayList<PictureViewModel>();
+        photoURLs = new ArrayList<String>();
 
-            viewModels = new ArrayList<PictureViewModel>();
-            photoURLs = new ArrayList<String>();
+        initializePictures();
 
-            initializePictures();
+        mainViewGrid.setVisibility(view.INVISIBLE); // hide the grid view and shows listview by default
 
-            mainViewGrid.setVisibility(view.INVISIBLE); // hide the grid view and shows listview by default
+        swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reinitializePictures();
+                swipelayout.setRefreshing(false);
+                checkInvitations();
+            }
+        });
 
-            swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-            swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    reinitializePictures();
-                    swipelayout.setRefreshing(false);
-                    checkInvitations();
-                }
-            });
+        // next bit of code with setonscrolllistener is a bit of a workaround for having multiple
+        // list/grid views inside a swiperefreshlayout
+        // allows scrolling up without forced refreshing
+        mainViewList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-            // next bit of code with setonscrolllistener is a bit of a workaround for having multiple
-            // list/grid views inside a swiperefreshlayout
-            // allows scrolling up without forced refreshing
-            mainViewList.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
 
-                }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (mainViewList == null || mainViewList.getChildCount() == 0) ?
+                                0 : mainViewList.getChildAt(0).getTop();
+                swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+            }
+        });
 
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    int topRowVerticalPosition =
-                            (mainViewList == null || mainViewList.getChildCount() == 0) ?
-                                    0 : mainViewList.getChildAt(0).getTop();
-                    swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-                }
-            });
+        mainViewGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-            mainViewGrid.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
 
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    int topRowVerticalPosition =
-                            (mainViewGrid == null || mainViewGrid.getChildCount() == 0) ?
-                                    0 : mainViewGrid.getChildAt(0).getTop();
-                    swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-                }
-            });
-        }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (mainViewGrid == null || mainViewGrid.getChildCount() == 0) ?
+                                0 : mainViewGrid.getChildAt(0).getTop();
+                swipelayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+            }
+        });
 
         return view;
     }

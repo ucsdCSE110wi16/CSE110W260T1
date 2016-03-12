@@ -44,6 +44,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class ToolbarFragment extends Fragment implements View.OnClickListener {
+    public static final String TAG = "ToolbarFragment";
+
     private final int IMAGE_MAX_SIZE = 1080;
     private View view;
     private HomepageFragment fragmentHomepage;
@@ -62,6 +64,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private Button buttonViews;
 
     private Boolean onHomepage;
+    private Boolean onHistory;
+    private Boolean onManager;
 
     //manage user location information
     private LocationManager locationManager;
@@ -78,7 +82,7 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     }
 
     public static ToolbarFragment newInstance(HomepageFragment param1, GroupFragment param2, FoldersFragment param3) {
-        Log.d("toolbarfrag", "Created toolbar frag");
+        Log.d("toolbarfrag", "Created toolbar fragment instance");
         ToolbarFragment fragment = new ToolbarFragment();
         Bundle args = new Bundle();
         args.putSerializable(HOMEPAGE_KEY, param1);
@@ -91,6 +95,9 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate ToolbarFragment");
+
         if(savedInstanceState == null) {
             fragmentHomepage = (HomepageFragment) getArguments().getSerializable(
                     HOMEPAGE_KEY);
@@ -100,6 +107,10 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     FOLDERS_KEY);
 
             lastKnownLocation = null;
+
+            onHomepage = true;
+            onHistory = false;
+            onManager = false;
         }
     }
 
@@ -107,6 +118,8 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_toolbar, container, false);
+
+        Log.d(TAG, "onCreateView ToolbarFragment");
 
         buttonFolders = (Button) view.findViewById(R.id.button_folders);
         buttonCamera = (Button) view.findViewById(R.id.button_camera);
@@ -117,8 +130,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         buttonCamera.setOnClickListener(this);
         buttonManager.setOnClickListener(this);
         buttonViews.setOnClickListener(this);
-
-        onHomepage = true;
 
         return view;
     }
@@ -134,10 +145,16 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
-                trans.replace(R.id.placeholder, fragmentFolders);
-                trans.addToBackStack(null);
-                trans.commit();
-                onHomepage=false;
+                Log.d(TAG, "History button has been clicked");
+                if(!onHistory) {
+                    Log.d(TAG,"Switch to history page");
+                    trans.replace(R.id.placeholder, fragmentFolders);
+                    trans.addToBackStack(null);
+                    trans.commit();
+                    onHomepage = false;
+                    onHistory = true;
+                    onManager = false;
+                }
                 break;
             case R.id.button_camera:
                 if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) != null)
@@ -146,33 +163,36 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Cannot use camera because\nyou are not in a group", Toast.LENGTH_LONG).show();
                 break;
             case R.id.button_manager:
-                trans.replace(R.id.placeholder, fragmentGroup);
-                trans.addToBackStack(null);
-                trans.commit();
-                onHomepage=false;
+                Log.d(TAG, "Group manager button has been clicked");
+                if(!onManager) {
+                    Log.d(TAG,"Switch to manager page");
+                    trans.replace(R.id.placeholder, fragmentGroup);
+                    trans.addToBackStack(null);
+                    trans.commit();
+                    onHomepage = false;
+                    onHistory = false;
+                    onManager = true;
+                }
                 break;
             case R.id.button_views:
-                if(onHomepage)
+                Log.d(TAG, "Homepage button has been clicked");
+                if(onHomepage) {
+                    Log.d(TAG, "Switch views between listview/gridview");
                     fragmentHomepage.switchView();
+                }
                 else {
+                    Log.d(TAG,"Switch to homepage");
                     trans.replace(R.id.placeholder, fragmentHomepage);
                     trans.addToBackStack(null);
                     trans.commit();
+                    onHomepage = true;
+                    onHistory = false;
+                    onManager = false;
                 }
                 break;
 
         }
 
-    }
-
-    // I wonder if fragment is actually deleted or put into some background mode... may affect performance
-    public void switchPage(Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.placeholder, fragment, tag);
-        fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.commit();
     }
 
     public void useCamera() {

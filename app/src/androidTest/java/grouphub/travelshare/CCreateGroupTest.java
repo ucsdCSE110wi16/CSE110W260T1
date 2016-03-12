@@ -63,6 +63,13 @@ public class CCreateGroupTest {
         }
 
         onView(withId(R.id.edittext_prompt)).perform(ViewActions.pressImeActionButton());
+
+        try {
+            Thread.sleep(1000);
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Espresso.closeSoftKeyboard();
 
         try {

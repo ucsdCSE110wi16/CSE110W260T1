@@ -38,7 +38,6 @@ public class HomepageFragment extends Fragment implements Serializable{
 
     public HomepageFragment() {
         // Required empty public constructor
-        view = null;
     }
 
     public static HomepageFragment newInstance() {
@@ -50,8 +49,6 @@ public class HomepageFragment extends Fragment implements Serializable{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState==null) {
@@ -65,7 +62,7 @@ public class HomepageFragment extends Fragment implements Serializable{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.d(TAG,"HomepageFragment onCreateView");
         view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
         textViewGroupName = (TextView) view.findViewById(R.id.group_name_text);
@@ -79,6 +76,7 @@ public class HomepageFragment extends Fragment implements Serializable{
 
         initializePictures();
 
+        mainViewList.setVisibility(view.VISIBLE);
         mainViewGrid.setVisibility(view.INVISIBLE); // hide the grid view and shows listview by default
 
         swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -187,9 +185,11 @@ public class HomepageFragment extends Fragment implements Serializable{
     // To switch between gridview and listview
     public void switchView() {
         if(mainViewGrid.getVisibility() == view.GONE) {
+            Log.d(TAG,"Switch to gridview");
             mainViewGrid.setVisibility(view.VISIBLE);
             mainViewList.setVisibility(view.GONE);
         } else {
+            Log.d(TAG,"Switch to listview");
             mainViewGrid.setVisibility(view.GONE);
             mainViewList.setVisibility(view.VISIBLE);
         }

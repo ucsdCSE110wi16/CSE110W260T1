@@ -30,8 +30,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Initialize homepage and toolbar fragments
+        // Initialize homepage and other fragments
 
         HomepageFragment fragmentH = HomepageFragment.newInstance();
         GroupFragment fragmentG = GroupFragment.newInstance(fragmentH);

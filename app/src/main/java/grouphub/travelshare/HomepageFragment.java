@@ -77,7 +77,7 @@ public class HomepageFragment extends Fragment implements Serializable{
         initializePictures();
 
         mainViewList.setVisibility(view.VISIBLE);
-        mainViewGrid.setVisibility(view.INVISIBLE); // hide the grid view and shows listview by default
+        mainViewGrid.setVisibility(view.GONE); // hide the grid view and shows listview by default
 
         swipelayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipelayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

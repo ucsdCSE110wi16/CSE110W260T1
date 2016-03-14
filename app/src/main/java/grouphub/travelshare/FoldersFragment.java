@@ -27,6 +27,7 @@ public class FoldersFragment extends Fragment implements Serializable{
     private transient ListView historyView;
     private transient List<HistoryViewModel> viewModels; // to keep track of photos on folders page for listview
     private transient SwipeRefreshLayout swipelayout; // for swipe to refresh
+    private transient ToolbarFragment toolbarFragment;
 
     private static final String TAG = "FoldersFragment";
 
@@ -71,6 +72,10 @@ public class FoldersFragment extends Fragment implements Serializable{
         return view;
     }
 
+    public void setToolbarFragment(ToolbarFragment toolbarFragment) {
+        this.toolbarFragment = toolbarFragment;
+    }
+
     private void initializeFolders() {
         ArrayList<TravelGroup> grs;
 
@@ -101,12 +106,22 @@ public class FoldersFragment extends Fragment implements Serializable{
         for (int i = groups.size()-1 ; i >= 0; i--) {
             String coverPhotoUrl = "";
             ArrayList<Photo> photos = (groups.get(i)).getPhotos();
+            HistoryViewModel row;
 
             if(photos.size() != 0)
                 coverPhotoUrl = photos.get(photos.size()-1).getPhotoUrl(); // Use latest photo as cover
 
-            // for listview
-            HistoryViewModel row = new HistoryViewModel(groups.get(i).getGroupName(), coverPhotoUrl, groups.get(i), getFragmentManager());
+            // current group is slightly different -- should take to homepage if clicked and also have marker
+            if(i == (groups.size()-1)) {
+                row = new HistoryViewModel(groups.get(i).getGroupName(), coverPhotoUrl,
+                        groups.get(i), getFragmentManager(), toolbarFragment);
+                // pass in toolbarfragment to switch to homepage only if current group
+            }
+            else{
+                // for listview
+                row = new HistoryViewModel(groups.get(i).getGroupName(), coverPhotoUrl,
+                        groups.get(i), getFragmentManager(), null);
+            }
 
             viewModels.add(row);
 
@@ -114,10 +129,6 @@ public class FoldersFragment extends Fragment implements Serializable{
 
         HistoryListViewAdapter listAdapter = new HistoryListViewAdapter(getActivity(), viewModels);
         historyView.setAdapter(listAdapter);
-    }
-
-    public void viewOldGroup(TravelGroup oldGroup){
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

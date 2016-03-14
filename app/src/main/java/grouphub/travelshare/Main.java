@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -33,12 +34,19 @@ public class Main extends AppCompatActivity {
         // Initialize homepage and other fragments
 
         HomepageFragment fragmentH = HomepageFragment.newInstance();
-        GroupFragment fragmentG = GroupFragment.newInstance(fragmentH);
+        GroupFragment fragmentG = GroupFragment.newInstance();
         FoldersFragment fragmentF = FoldersFragment.newInstance();
         ToolbarFragment fragmentT = ToolbarFragment.newInstance(fragmentH, fragmentG, fragmentF);
+        fragmentG.setHomepageFragment(fragmentH);
+        fragmentF.setToolbarFragment(fragmentT);
+
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragment_toolbar, fragmentT);
-        fragmentTransaction.add(R.id.placeholder, fragmentH);
+        fragmentTransaction.add(R.id.fragment_toolbar, fragmentT, "fragmentToolbar");
+        fragmentTransaction.add(R.id.placeholder, fragmentH, "fragmentHomepage");
+        fragmentTransaction.add(R.id.placeholder, fragmentG, "fragmentManager");
+        fragmentTransaction.add(R.id.placeholder, fragmentF, "fragmentHistory");
+        fragmentTransaction.hide(fragmentG);
+        fragmentTransaction.hide(fragmentF);
         fragmentTransaction.commit();
 
         //request permissions

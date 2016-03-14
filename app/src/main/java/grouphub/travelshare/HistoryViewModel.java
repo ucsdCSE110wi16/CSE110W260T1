@@ -9,12 +9,14 @@ public class HistoryViewModel {
     private String imageUrl;
     private TravelGroup oldGroup;
     private FragmentManager fragmentManager;
+    private ToolbarFragment toolbarFragment;
 
-    public HistoryViewModel(String text, String imageUrl, TravelGroup oldGroup, FragmentManager fragManager) {
+    public HistoryViewModel(String text, String imageUrl, TravelGroup oldGroup, FragmentManager fragManager, ToolbarFragment toolbarFragment) {
         this.text = text;
         this.imageUrl = imageUrl;
         this.oldGroup = oldGroup;
         this.fragmentManager = fragManager;
+        this.toolbarFragment = toolbarFragment;
     }
 
     public String getText() {
@@ -34,6 +36,8 @@ public class HistoryViewModel {
     }
 
     public TravelGroup getOldGroup() { return oldGroup; }
+
+    public ToolbarFragment getToolbarFragment() { return toolbarFragment; }
 
     public FragmentManager getFragmentManager() { return fragmentManager; }
 }

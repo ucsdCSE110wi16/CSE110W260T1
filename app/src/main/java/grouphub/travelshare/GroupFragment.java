@@ -43,10 +43,9 @@ public class GroupFragment extends Fragment implements Serializable {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static GroupFragment newInstance(HomepageFragment param1) {
+    public static GroupFragment newInstance() {
         GroupFragment fragment = new GroupFragment();
         Bundle args = new Bundle();
-        args.putSerializable(HOMEPAGE_KEY, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,6 +92,10 @@ public class GroupFragment extends Fragment implements Serializable {
         // Inflate the layout for this fragment
         return view;
 
+    }
+
+    public void setHomepageFragment(HomepageFragment homepageFragment) {
+        this.fragmentHomepage = homepageFragment;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

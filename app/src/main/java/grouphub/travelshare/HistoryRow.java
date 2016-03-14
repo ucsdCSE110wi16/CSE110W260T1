@@ -4,6 +4,7 @@ package grouphub.travelshare;
 // https://www.codementor.io/tips/3473732891/how-to-combine-an-imageview-with-some-text-in-listview
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -11,8 +12,10 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -60,13 +63,29 @@ public class HistoryRow {
                     .into(imageView);
         }
 
+        // distinguish current group from others
+        if(viewModel.getToolbarFragment() != null) {
+            textView.setBackgroundResource(R.drawable.textview_border);
+        }
+
         rowLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 FragmentManager Manager = viewModel.getFragmentManager();
                 FragmentTransaction trans = Manager.beginTransaction();
-                trans.replace(R.id.placeholder, OldGroupFragment.newInstance(viewModel.getOldGroup()));
-                trans.addToBackStack(null);
-                trans.commit();
+
+                // Hide history page fragment
+                Fragment historyFragment = Manager.findFragmentByTag("fragmentHistory");
+                trans.hide(historyFragment);
+
+                // if old group, create temp old group page
+                if(viewModel.getToolbarFragment() == null) {
+                    trans.add(R.id.placeholder, OldGroupFragment.newInstance(viewModel.getOldGroup()), "oldGroupFragment");
+                    trans.addToBackStack(null);
+                    trans.commit();
+                }
+                else {// if current group switch to homepage instead
+                    viewModel.getToolbarFragment().switchToHomepage();
+                }
             }
         });
     }

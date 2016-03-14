@@ -13,16 +13,22 @@
         android:adjustViewBounds="true"
         android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/group_name_history"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignLeft="@+id/picture"
-        android:layout_alignBottom="@+id/picture"
-        android:text="Dummy Text"
-        android:textSize="20sp"
         android:layout_toRightOf="@+id/picture_history"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary" />
+        android:layout_alignLeft="@+id/picture"
+        android:layout_alignBottom="@+id/picture">
+        <TextView
+            android:id="@+id/group_name_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dummy Text"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorPrimary"
+            android:padding="4dp"/>
+    </RelativeLayout>
+
 
 </RelativeLayout>

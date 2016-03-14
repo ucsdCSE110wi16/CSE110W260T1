@@ -64,8 +64,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
     private Button buttonViews;
 
     private Boolean onHomepage;
-    private Boolean onHistory;
-    private Boolean onManager;
 
     //manage user location information
     private LocationManager locationManager;
@@ -109,8 +107,6 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
             lastKnownLocation = null;
 
             onHomepage = true;
-            onHistory = false;
-            onManager = false;
         }
     }
 
@@ -139,22 +135,18 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
         FragmentManager Manager = getFragmentManager();
         FragmentTransaction trans = Manager.beginTransaction();
 
-        // Destroy oldGroupFragment
-        trans.remove(Manager.findFragmentById(R.id.placeholder));
+        // Destroy oldGroupFragment when switching page
+        if(Manager.findFragmentByTag("oldGroupFragment") != null)
+            trans.remove(Manager.findFragmentByTag("oldGroupFragment"));
 
         // For the functionality of the buttons
         switch (view.getId()) {
             case R.id.button_folders:
                 Log.d(TAG, "History button has been clicked");
-                if(!onHistory) {
-                    Log.d(TAG,"Switch to history page");
-                    trans.replace(R.id.placeholder, fragmentFolders);
-                    trans.addToBackStack(null);
-                    trans.commit();
-                    onHomepage = false;
-                    onHistory = true;
-                    onManager = false;
-                }
+                trans.hide(fragmentHomepage);
+                trans.hide(fragmentGroup);
+                trans.show(fragmentFolders);
+                onHomepage = false;
                 break;
             case R.id.button_camera:
                 if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) != null)
@@ -164,15 +156,10 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.button_manager:
                 Log.d(TAG, "Group manager button has been clicked");
-                if(!onManager) {
-                    Log.d(TAG,"Switch to manager page");
-                    trans.replace(R.id.placeholder, fragmentGroup);
-                    trans.addToBackStack(null);
-                    trans.commit();
-                    onHomepage = false;
-                    onHistory = false;
-                    onManager = true;
-                }
+                trans.hide(fragmentHomepage);
+                trans.show(fragmentGroup);
+                trans.hide(fragmentFolders);
+                onHomepage = false;
                 break;
             case R.id.button_views:
                 Log.d(TAG, "Homepage button has been clicked");
@@ -181,18 +168,30 @@ public class ToolbarFragment extends Fragment implements View.OnClickListener {
                     fragmentHomepage.switchView();
                 }
                 else {
-                    Log.d(TAG,"Switch to homepage");
-                    trans.replace(R.id.placeholder, fragmentHomepage);
-                    trans.addToBackStack(null);
-                    trans.commit();
+                    Log.d(TAG, "Switch to homepage");
+                    trans.show(fragmentHomepage);
+                    trans.hide(fragmentGroup);
+                    trans.hide(fragmentFolders);
                     onHomepage = true;
-                    onHistory = false;
-                    onManager = false;
                 }
                 break;
 
         }
+        trans.commit(); // commit fragment changes
+    }
 
+    // for use by current group in history page to switch to homepage
+    // rather than to oldgroupfragment
+    public void switchToHomepage() {
+        FragmentManager Manager = getFragmentManager();
+        FragmentTransaction trans = Manager.beginTransaction();
+
+        trans.show(fragmentHomepage);
+        trans.hide(fragmentGroup);
+        trans.hide(fragmentFolders);
+        trans.commit(); // commit fragment changes
+
+        onHomepage = true;
     }
 
     public void useCamera() {

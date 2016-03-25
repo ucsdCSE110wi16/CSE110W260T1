@@ -3,6 +3,7 @@ package grouphub.travelshare;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class GroupFragment extends Fragment implements Serializable {
     private transient View view;
 
     private transient HomepageFragment fragmentHomepage; // need the reference for page reset upon group creation
+    private transient GroupFragment fragment;
     private transient Button button_creategroup;
     private transient Button button_inviteusertogroup;
     private popupModes popupMode;
@@ -109,10 +111,18 @@ public class GroupFragment extends Fragment implements Serializable {
                     // upon closing popup window, create group
                     TravelGroup travelGroup = new TravelGroup(ParseUser.getCurrentUser(), editTextString);
                     Toast.makeText(getActivity(), "Group Created:\n" + editTextString, Toast.LENGTH_LONG).show();
-
                     // reset page upon entering a new group
+
+                    FragmentManager Manager = getFragmentManager();
+                    FragmentTransaction trans = Manager.beginTransaction();
+                    fragmentHomepage = (HomepageFragment)Manager.findFragmentByTag("fragmentHomepage");
+
                     fragmentHomepage.resetGroupName();
                     fragmentHomepage.reinitializePictures();
+                    trans.show(fragmentHomepage);
+                    trans.hide(Manager.findFragmentByTag("fragmentManager"));
+                    trans.hide(Manager.findFragmentByTag("fragmentHistory"));
+                    trans.commit();
                     break;
                 case INVITE:
                     inviteUserToGroup(editTextString);

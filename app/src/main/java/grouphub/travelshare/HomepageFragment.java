@@ -54,7 +54,7 @@ public class HomepageFragment extends Fragment implements Serializable{
         if(savedInstanceState==null) {
             if(TravelGroup.getActiveTravelGroup(ParseUser.getCurrentUser()) == null)
                 Log.d(TAG, "Problem accessing current travel group");
-            checkInvitations();
+                checkInvitations();
         }
 
     }
